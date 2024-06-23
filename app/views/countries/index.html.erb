@@ -1,0 +1,6 @@
+<h1>Countries#index</h1>
+<div id="countries_list">
+	<%= render partial: 'countries_list', locals: { countries: @countries } %>
+</div>
+
+<%= button_to "Refresh", countries_refresh_path, remote: true, method: :get %>

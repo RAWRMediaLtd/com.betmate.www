@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  db:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  web:
+    build: .
+    command: bundle exec rails s -b '0.0.0.0' -p 3000
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      RAILS_ENV: development
+      MONGODB_HOST: db
+      MONGODB_PORT: 27017
+    env_file:
+      - .env
+
+volumes:
+  mongodb_data:
