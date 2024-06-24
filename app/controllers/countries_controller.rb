@@ -1,13 +1,13 @@
 class CountriesController < ApplicationController
-  def index
+	def index
 		@countries = Country.all
-  end
+	end
 
-  def refresh
-  	fetch_and_update_countries
+	def refresh
+		fetch_and_update_countries
 		@countries = Country.all
 		respond_to do |format|
-			format.js { 
+			format.js {
 				render partial: 'countries_list', locals: {
 					countries: @countries
 				}
@@ -19,8 +19,9 @@ class CountriesController < ApplicationController
 
 	def fetch_and_update_countries
 		response = HTTParty.get('https://v3.football.api-sports.io/countries', headers: {
-			'x-rapidapi-host' => ENV['API_SPORTS_URL'],
-			'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
+			#'x-rapidapi-host' => ENV['API_SPORTS_URL'],
+			#'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
+			'x-apisports-key' => ENV['API_SPORTS_KEY']
 		})
 
 		puts response

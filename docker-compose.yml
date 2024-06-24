@@ -21,6 +21,7 @@ services:
       RAILS_ENV: development
       MONGODB_HOST: db
       MONGODB_PORT: 27017
+      API_SPORTS_KEY: ${API_SPORTS_KEY}
     env_file:
       - .env
 
