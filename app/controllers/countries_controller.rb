@@ -1,5 +1,7 @@
 class CountriesController < ApplicationController
 	def index
+		Rails.logger.debug "API_SPORTS_URI: #{ENV['API_SPORTS_URI']}"
+		Rails.logger.debug "API_SPORTS_KEY: #{ENV['API_SPORTS_KEY']}"
 		@countries = Country.all
 	end
 
@@ -19,9 +21,9 @@ class CountriesController < ApplicationController
 
 	def fetch_and_update_countries
 		response = HTTParty.get('https://v3.football.api-sports.io/countries', headers: {
-			#'x-rapidapi-host' => ENV['API_SPORTS_URL'],
-			#'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
+			'x-rapidapi-host' => ENV['API_SPORTS_URI'],
+			'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
+			#'x-apisports-key' => ENV['API_SPORTS_KEY']
 		})
 
 		puts response
