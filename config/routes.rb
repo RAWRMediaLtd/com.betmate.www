@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'leagues/index'
+  get 'leagues/show'
   root 'countries#index'
 
   #get 'countries/index'
