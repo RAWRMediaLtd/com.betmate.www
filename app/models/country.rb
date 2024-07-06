@@ -1,3 +1,32 @@
 class Country < ApplicationRecord
-	has_many :season
+	has_many :leagues
+
+	def self.fetch_and_update_from_api
+		response = HTTParty.get('https://v3.football.api-sports.io/countries', headers: {
+			'x-rapidapi-host' => ENV['API_SPORTS_URI'],
+			'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
+			#'x-apisports-key' => ENV['API_SPORTS_KEY']
+		})
+
+		puts response
+
+		if response.success?
+			remote_countries = response.parsed_response['response']
+
+			remote_countries.each do |remote_country|
+				country = Country.find_or_initialize_by(code: remote_country['code'])
+				if country.new_record? || country_updated?(country, remote_country)
+					country.update!(
+						name: remote_country['name'],
+						code: remote_country['code'],
+						flag: remote_country['flag']
+					)
+				end
+			end
+		end
+	end
+
+	def country_updated?(local_country, remote_country)
+		local_country.name != remote_country['name'] || local_country.flag != remote_country['flag']
+	end
 end

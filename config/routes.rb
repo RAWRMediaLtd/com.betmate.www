@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
-  get 'leagues/index'
-  get 'leagues/show'
-  root 'countries#index'
+	resources :countries, only: [:index]
 
-  #get 'countries/index'
+  resources :leagues, only: [:index, :show] do
+  	collection do
+  		get 'refresh'
+		end
+	end
+  #get 'leagues/refresh', to: 'leagues#refresh'
+
   get 'countries/refresh', to: 'countries#refresh'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

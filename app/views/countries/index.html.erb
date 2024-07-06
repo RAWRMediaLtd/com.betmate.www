@@ -3,4 +3,9 @@
 	<%= render partial: 'countries_list', locals: { countries: @countries } %>
 </div>
 
-<%= button_to "Refresh", countries_refresh_path, remote: true, method: :get %>
+<%=
+	button_to "Refresh",
+	countries_refresh_path,
+	remote: true,
+	method: :get
+%>
