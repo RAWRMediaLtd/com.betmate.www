@@ -1,2 +1,23 @@
-<h1>Leagues#show</h1>
-<p>Find me in app/views/leagues/show.html.erb</p>
+<h1><%= @league.name %></h1>
+<p>Type: <%= @league.type %></p>
+<p>Logo <%= image_tag @league.logo if @league.logo.present? %></p>
+
+<h2>Country</h2>
+<p>Name: <%= @league.country.name %></p>
+<p>Code: <%= @league.country.code %></p>
+<% if @league.country.flag.present? %>
+	<p>Flag: <%= image_tag @league.country.flag %></p>
+<% end %>
+
+<h2>Seasons</h2>
+<% @league.seasons.each do |season| %>
+	<div class="season">
+		<p>Year: <%= season.year %></p>
+		<p>Start Date: <%= season.start %></p>
+		<p>End Date: <%= season.end %></p>
+		<p>Current: <%= season.current %></p>
+		<p>Coverage: <%= season.covverage.to_json %></p>
+	</div>
+<% end %>
+
+
