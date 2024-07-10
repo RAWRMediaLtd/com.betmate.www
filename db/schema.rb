@@ -30,12 +30,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_26_070617) do
   end
 
   create_table "seasons", force: :cascade do |t|
-    t.integer "league_id", null: false
     t.integer "year"
     t.date "start"
     t.date "end"
     t.boolean "current"
     t.json "coverage"
+    t.integer "league_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["league_id"], name: "index_seasons_on_league_id"

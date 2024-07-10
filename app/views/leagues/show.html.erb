@@ -10,14 +10,8 @@
 <% end %>
 
 <h2>Seasons</h2>
-<% @league.seasons.each do |season| %>
-	<div class="season">
-		<p>Year: <%= season.year %></p>
-		<p>Start Date: <%= season.start %></p>
-		<p>End Date: <%= season.end %></p>
-		<p>Current: <%= season.current %></p>
-		<p>Coverage: <%= season.covverage.to_json %></p>
-	</div>
-<% end %>
-
+<%= link_to 'Refresh Seasons', refresh_league_seasons_path(@league), remote: true, method: :get %>
+<div id="seasons-container">
+  <%= render partial: 'seasons/seasons_list', locals: { seasons: @league.seasons } %>
+</div>
 

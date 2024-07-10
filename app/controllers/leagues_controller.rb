@@ -1,7 +1,6 @@
 class LeaguesController < ApplicationController
   def index
 		@leagues = League.all
-    @country = League.country
   end
 
   def show

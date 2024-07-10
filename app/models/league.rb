@@ -11,22 +11,18 @@ class League < ApplicationRecord
 
 		if response.success?
 			remote_leagues = response.parsed_response['response']
-
 			remote_leagues.each do |remote_league|
 				league_data = remote_league['league']
 				country_data = remote_league['country']
+				seasons_data = remote_league['seasons']
 
 				country = Country.find_or_create_by(name: country_data['name']) do |c|
 					c.code = country_data['code']
 					c.flag = country_data['flag']
 				end
 
-				seasons = remote_league['seasons']
 
-
-				puts "Processing league: #{league_data['name']}"
-				puts "Processing country: #{country_data['name']}"
-
+				
 				league = League.find_or_initialize_by(id: league_data['id'])
 				if league.new_record? || self.league_updated?(league, league_data)
 					league.update!(
@@ -37,6 +33,17 @@ class League < ApplicationRecord
 						country: country
 					)
 				end
+
+
+				seasons_data.each do |season_data|
+          season = league.seasons.find_or_initialize_by(year: season_data['year'])
+				  season.update!(
+				    start: season_data['start'],
+				    end: season_data['end'],
+				    current: season_data['current'],
+				    coverage: season_data['coverage']
+				  )
+				end
 			end
 		end
 	end
@@ -46,4 +53,5 @@ class League < ApplicationRecord
 		local_league.type != remote_league['type'] ||
 		local_league.flag != remote_league['flag']
 	end
+
 end

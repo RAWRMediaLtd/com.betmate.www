@@ -1,10 +1,19 @@
 Rails.application.routes.draw do
+  get 'seasons/index'
+  get 'seasons/show'
+  get 'seasons/refresh'
 	resources :countries, only: [:index]
 
   resources :leagues, only: [:index, :show] do
   	collection do
   		get 'refresh'
 		end
+
+		resources :seasons, only: [:index, :show] do
+		  collection do
+		    get 'refresh'
+      end
+    end
 	end
   #get 'leagues/refresh', to: 'leagues#refresh'
 
