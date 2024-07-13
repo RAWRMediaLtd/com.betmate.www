@@ -1,7 +1,7 @@
 <ul class="league-list">
 	<% leagues.each do |league| %>
 		<li class="league">
-			<%= link_to league.name, league_path(league) %> 
+			<%= link_to league.name, country_league_path(league.country.slug, league.slug) %>
 		</li>
 	<% end %>
 </ul>

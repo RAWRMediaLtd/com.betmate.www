@@ -1,4 +1,6 @@
 class Country < ApplicationRecord
+	include Sluggable
+
 	has_many :leagues
 
 	def self.fetch_and_update_from_api
@@ -15,18 +17,40 @@ class Country < ApplicationRecord
 
 			remote_countries.each do |remote_country|
 				country = Country.find_or_initialize_by(code: remote_country['code'])
-				if country.new_record? || country_updated?(country, remote_country)
+				if country.new_record? || country.country_updated?(remote_country)
 					country.update!(
 						name: remote_country['name'],
 						code: remote_country['code'],
-						flag: remote_country['flag']
+						flag: remote_country['flag'],
 					)
+
+					country.generate_slug
+					country.save!
 				end
 			end
 		end
 	end
 
-	def country_updated?(local_country, remote_country)
-		local_country.name != remote_country['name'] || local_country.flag != remote_country['flag']
+	def self.find_or_initialize_and_update(country_data)
+		country = Country.find_or_initialize_by(name: country_data['name'])
+
+		puts country
+
+		if country.new_record? || country.country_updated?(country_data)
+			country.assign_attributes(
+				name: country_data['name'],
+				code: country_data['code'],
+				flag: country_data['flag']
+			)
+			country.slug ||= country.name.parameterize
+			country.save!(validate: false)
+		end
+		country
+	end
+
+	def country_updated?(remote_country)
+		name != remote_country['name'] ||
+		code != remote_country['code'] ||
+		flag != remote_country['flag']
 	end
 end

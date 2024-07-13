@@ -1,5 +1,5 @@
 <h1><%= @league.name %></h1>
-<p>Type: <%= @league.type %></p>
+<p>Type: <%= @league.league_type %></p>
 <p>Logo <%= image_tag @league.logo if @league.logo.present? %></p>
 
 <h2>Country</h2>
@@ -8,10 +8,4 @@
 <% if @league.country.flag.present? %>
 	<p>Flag: <%= image_tag @league.country.flag %></p>
 <% end %>
-
-<h2>Seasons</h2>
-<%= link_to 'Refresh Seasons', refresh_league_seasons_path(@league), remote: true, method: :get %>
-<div id="seasons-container">
-  <%= render partial: 'seasons/seasons_list', locals: { seasons: @league.seasons } %>
-</div>
 

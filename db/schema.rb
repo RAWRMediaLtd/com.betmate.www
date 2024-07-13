@@ -15,15 +15,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_26_070617) do
     t.string "name"
     t.string "code"
     t.string "flag"
+    t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_countries_on_slug", unique: true
   end
 
   create_table "leagues", force: :cascade do |t|
     t.string "name"
-    t.string "type"
+    t.string "league_type"
     t.string "logo"
     t.integer "country_id", null: false
+    t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["country_id"], name: "index_leagues_on_country_id"

@@ -4,6 +4,7 @@ class CreateCountries < ActiveRecord::Migration[7.1]
       t.string :name
       t.string :code
       t.string :flag
+      t.string :slug, null: false, index: { unique: true }
 
       t.timestamps
     end

@@ -1,0 +1,8 @@
+<h1><%= @country.name %></h1>
+
+<div id="leagues-container">
+
+	<%= link_to 'Refresh Leagues', refresh_country_leagues_path(@country.slug), remote: true, method: :get %>
+
+	<%= render partial: 'leagues/leagues_list', locals: { leagues: @country.leagues } %>
+</div>
