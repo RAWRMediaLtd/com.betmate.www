@@ -7,6 +7,7 @@ class CreateVenues < ActiveRecord::Migration[7.1]
       t.integer :capacity
       t.string :surface
       t.string :image
+			t.string :slug, null: false
 
       t.timestamps
     end
