@@ -1,11 +1,16 @@
+<h2>Information</h2>
+
 <h1><%= @league.name %></h1>
 <p>Type: <%= @league.league_type %></p>
-<p>Logo <%= image_tag @league.logo if @league.logo.present? %></p>
+<%= image_tag @league.logo if @league.logo.present? %>
 
-<h2>Country</h2>
 <p>Name: <%= @league.country.name %></p>
 <p>Code: <%= @league.country.code %></p>
 <% if @league.country.flag.present? %>
 	<p>Flag: <%= image_tag @league.country.flag %></p>
 <% end %>
 
+<h2>Seasons for <%= @league.name %></h2>
+<%= button_to 'refresh seasons', refresh_country_league_seasons_path(@league.country.slug, @league.id), method: :get, remote: true %>
+
+<%= render partial: 'seasons/seasons_list', locals: { seasons: @league.seasons.order(year: :desc) } %>

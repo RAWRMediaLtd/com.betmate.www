@@ -8,9 +8,7 @@ class League < ApplicationRecord
 
 		url = country ? "https://v3.football.api-sports.io/leagues?country=#{country.name}": "https://v3.football.api-sports.io/leagues"
 		response = HTTParty.get(url, headers: {
-			'x-rapidapi-host' => ENV['API_SPORTS_URI'],
-			'x-rapidapi-key'  => ENV['API_SPORTS_KEY']
-			#'x-apisports-key' => ENV['API_SPORTS_KEY']
+			'x-apisports-key' => ENV['API_SPORTS_KEY']
 		})
 
 		if response.success?
@@ -22,20 +20,12 @@ class League < ApplicationRecord
 				seasons_data = remote_league['seasons']
 
 				country = Country.find_or_initialize_and_update(country_data)
-
 				league = League.find_or_initialize_and_update(league_data, country)
 
-				/
-				seasons_data.each do |season_data|
-          season = league.seasons.find_or_initialize_by(year: season_data['year'])
-				  season.update!(
-				    start: season_data['start'],
-				    end: season_data['end'],
-				    current: season_data['current'],
-				    coverage: season_data['coverage']
-				  )
-				end
-				/
+        seasons_data.each do |season_data|
+          Season.find_or_initialize_and_update(season_data, league)
+        end
+
 			end
 		end
 	end

@@ -10,17 +10,12 @@ class SeasonsController < ApplicationController
   end
 
   def refresh
-		Season.fetch_and_update_from_api(@league)
-		@seasons = @league.seasons
 
-		respond_to do |format|
-			format.html { redirect_to league_seasons_path(@league), notice: 'Seasons updated successfully' }
-		end
   end
 
 	private
 
 	def set_league
-		@league = League.find(params[:league_id])
+		@league = League.find(params[:league_slug])
 	end
 end
