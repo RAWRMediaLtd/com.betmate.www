@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  referee: MyString
+  timezone: MyString
+  date: 2024-07-14 11:36:02
+  timestamp: 1
+  status: one
+  venue_references: MyString
+  home_team: one
+  away_team: one
+  league: one
+  season: 1
+  round: MyString
+
+two:
+  referee: MyString
+  timezone: MyString
+  date: 2024-07-14 11:36:02
+  timestamp: 1
+  status: two
+  venue_references: MyString
+  home_team: two
+  away_team: two
+  league: two
+  season: 1
+  round: MyString

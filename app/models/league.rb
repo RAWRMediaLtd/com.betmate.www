@@ -3,6 +3,8 @@ class League < ApplicationRecord
 
 	belongs_to :country
 	has_many :seasons, dependent: :destroy
+	has_many :teams
+	has_many :fixtures
 
 	def self.fetch_and_update_from_api(country = nil)
 

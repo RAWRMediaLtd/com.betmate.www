@@ -1,0 +1,15 @@
+<h1>Fixtures#index</h1>
+<p>Find me in app/views/fixtures/index.html.erb</p>
+
+<%=
+	button_to "Refresh",
+		refresh_country_league_season_fixtures_path,
+		remote: true,
+	method: :get
+%>
+
+<div id="fixtures-container">
+	<div id="fixture_list">
+		<%= render partial: 'fixtures_list', locals: { fixtures: @fixtures } %>
+	</div>
+</div>

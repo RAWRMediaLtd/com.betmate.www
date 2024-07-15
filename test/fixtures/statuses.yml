@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  long: MyString
+  short: MyString
+  elapsed: 1
+
+two:
+  long: MyString
+  short: MyString
+  elapsed: 1

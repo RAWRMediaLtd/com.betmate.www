@@ -2,7 +2,9 @@ class SeasonsController < ApplicationController
 	before_action :set_league, only: [:index, :show, :refresh]
 
   def index
-		@seasons = @league.season
+		@seasons = @league.seasons
+
+		puts @seasons
   end
 
   def show
@@ -16,6 +18,7 @@ class SeasonsController < ApplicationController
 	private
 
 	def set_league
-		@league = League.find(params[:league_slug])
+
+		@league = League.find_by!(slug: params[:league_slug])
 	end
 end

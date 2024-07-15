@@ -1,0 +1,11 @@
+<h1>Venues#index</h1>
+<div id="venues_list">
+	<%= render partial: 'venues_list', locals: { venues: @venues } %>
+</div>
+
+<%=
+	button_to "Refresh",
+	refresh_venues_path,
+	remote: true,
+	method: :get
+%>

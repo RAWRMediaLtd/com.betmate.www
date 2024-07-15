@@ -1,9 +1,10 @@
 class Season < ApplicationRecord
-	has_many :league_seasons
-	has_many :leagues, through: :league_seasons
+	include Sluggable
+
+	belongs_to :league
+	has_many :fixtures, dependent: :destroy
 
 	def self.find_or_initialize_and_update(season_data, league)
-		puts season_data
 		season = league.seasons.find_or_initialize_by(year: season_data['year'])
 
 		Rails.logger.debug "Found or initialized season: #{season.id} - #{season.year}"
@@ -17,6 +18,7 @@ class Season < ApplicationRecord
 				current: season_data['current'],
 				coverage: season_data['coverage']
 			)
+			season.generate_slug
 			season.save!
 		end
 		season

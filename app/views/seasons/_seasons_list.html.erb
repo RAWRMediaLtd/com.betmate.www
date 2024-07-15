@@ -11,7 +11,7 @@
 	<tbody>
 		<% seasons.each do |season| %>
 			<tr class="season">
-				<th scope="row"><%= season.year %></th>
+				<th scope="row"><%= link_to season.year, country_league_season_fixtures_path(@league.country.slug, @league.slug, season.slug) %></th>
 				<td><%= season.start %></td>
 				<td><%= season.end %></td>
 				<td><%= season.current %></td>
