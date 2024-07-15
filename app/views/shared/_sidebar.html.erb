@@ -1,0 +1,16 @@
+
+<nav class="col-md-4 d-none d-md-block bg-light sidebar">
+	<div class="sidebar-sticky">
+		<ul class="nav flex-column">
+			<% if @country %>
+				<h3><%= @country.name %></h3>
+				<% @country.leagues.each do |league| %>
+					<li class="nav-item <%= 'active' if league == @league %>">
+						<a class="nav-link" href=""><%= league.name %></a>
+					</li>
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+</nav>
+

@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 				collection do
 					get 'refresh'
 				end
-				
+
 				resources :fixtures, only: [:index, :show] do
 					collection do
 						get 'refresh'
