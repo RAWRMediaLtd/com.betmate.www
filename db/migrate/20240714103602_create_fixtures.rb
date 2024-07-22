@@ -12,7 +12,6 @@ class CreateFixtures < ActiveRecord::Migration[7.1]
       # t.references :league, null: false, foreign_key: true
       t.references :season, null: false, foreign_key: true
       t.string :round
-			t.string :slug
 
       t.timestamps
     end

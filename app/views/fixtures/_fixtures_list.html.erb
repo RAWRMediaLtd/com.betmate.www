@@ -1,17 +1,19 @@
 
-<table class="table fixture-list">
-	<thead>
-		<th>Date</th>
-		<th>Home</th>
-		<th>Away</th>
-	</thead>
+
+<table class="table">
 	<tbody>
-	<% fixtures.each do |fixture| %>
-		<tr>
-			<td><%= fixture.date.strftime("%d/%m/%Y") %></td>
-			<td><%= fixture.home_team.name %></td>
-			<td><%= fixture.away_team.name %></td>
-		</tr>
-	<% end %>
+		<% @fixtures.each do |date, fixtures| %>
+			<tr class="table-secondary">
+				<td colspan="4"><%= date.strftime("%d/%m/%Y") %></td>
+			</tr>
+			<% fixtures.each do |fixture| %>
+				<tr scope="row">
+					<td><%= fixture.date.strftime("%H:%M") %></td>
+					<td><%= fixture.home_team.name %></td>
+					<td>v</td>
+					<td><%= fixture.away_team.name %></td>
+				</tr>
+			<% end %>
+		<% end %>
 	</tbody>
-</ul>
+</table>

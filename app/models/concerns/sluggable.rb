@@ -9,6 +9,8 @@ module Sluggable
 	def generate_slug
 		if self.is_a?(Season)
 			self.slug = generate_season_slug
+		elsif self.is_a?(Fixture)
+			self.slug = generate_fixture_slug
 		else
 			self.slug ||= name.parameterize if name.present?
 		end
@@ -25,6 +27,10 @@ module Sluggable
 		else
 			"#{start_year}-#{end_year}"
 		end
+	end
+
+	def generate_fixture_slug
+		"#{self.home_team.name}-#{self.away_team.name}".parameterize
 	end
 end
 

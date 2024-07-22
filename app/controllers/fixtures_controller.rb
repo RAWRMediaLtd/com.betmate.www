@@ -4,7 +4,7 @@ class FixturesController < ApplicationController
 	before_action :set_season
 
   def index
-		@fixtures = @season.fixtures.order(:date)
+		@fixtures = @season.fixtures.order(round: :asc, date: :asc).group_by { |fixture| fixture.date.to_date }
   end
 
   def show
@@ -13,7 +13,7 @@ class FixturesController < ApplicationController
 
   def refresh
 		Fixture.fetch_and_update_from_api(@season)
-		@fixtures = @season.fixtures.order(:date)
+		@fixtures = @season.fixtures.order(date: :asc).group_by { |fixture| fixture.date.to_date }
 
 		respond_to do |format|
 			format.html { redirect_to country_league_season_fixtures_path(@country.slug, @league.slug, @season.slug), notice: "Fixtures updated successfully" }

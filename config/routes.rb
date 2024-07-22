@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 					get 'refresh'
 				end
 
-				resources :fixtures, only: [:index, :show] do
+				resources :fixtures, param: :slug, only: [:index, :show] do
 					collection do
 						get 'refresh'
 					end

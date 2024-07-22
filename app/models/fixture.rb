@@ -1,4 +1,6 @@
 class Fixture < ApplicationRecord
+	include Sluggable
+
 	belongs_to :season
   belongs_to :home_team, class_name: 'Team', foreign_key: 'home_team_id'
   belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id'
@@ -27,6 +29,7 @@ class Fixture < ApplicationRecord
 				season: season,
 				round: fixture_data['league']['round']
 			)
+			fixture.generate_slug
 			fixture.save!
 
 			Status.find_or_initialize_and_update(fixture_data['fixture']['status'], fixture)
