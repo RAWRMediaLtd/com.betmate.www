@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   get 'fixtures/index'
   get 'fixtures/show'
   get 'teams/index'

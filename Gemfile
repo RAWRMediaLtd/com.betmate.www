@@ -67,3 +67,5 @@ gem "cssbundling-rails", "~> 1.4"
 gem "sidekiq", "~> 7.3"
 
 gem "sidekiq-scheduler", "~> 5.0"
+
+gem "devise", "~> 4.9"
