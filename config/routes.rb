@@ -1,13 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  get 'fixtures/index'
-  get 'fixtures/show'
-  get 'teams/index'
-  get 'teams/show'
-  get 'venues/index'
-  get 'venues/show'
+  root 'countries#index'
 
-	resources :countries, param: :slug, only: [:index, :show] do
+	resources :countries, param: :slug, path: '', only: [:index, :show] do
 		collection do
 			get 'refresh'
 		end
@@ -34,7 +29,6 @@ Rails.application.routes.draw do
 					get 'refresh'
 				end
 			end
-
 		end
 	end
 
