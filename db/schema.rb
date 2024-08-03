@@ -11,6 +11,9 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "countries", force: :cascade do |t|
     t.string "name"
     t.string "code"
@@ -26,11 +29,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "timezone"
     t.datetime "date"
     t.integer "timestamp"
-    t.integer "status_id"
-    t.integer "venue_id"
-    t.integer "home_team_id", null: false
-    t.integer "away_team_id", null: false
-    t.integer "season_id", null: false
+    t.bigint "venue_id"
+    t.bigint "home_team_id", null: false
+    t.bigint "away_team_id", null: false
+    t.bigint "season_id", null: false
     t.string "round"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -38,7 +40,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
     t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
     t.index ["season_id"], name: "index_fixtures_on_season_id"
-    t.index ["status_id"], name: "index_fixtures_on_status_id"
     t.index ["venue_id"], name: "index_fixtures_on_venue_id"
   end
 
@@ -46,7 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "name"
     t.string "league_type"
     t.string "logo"
-    t.integer "country_id", null: false
+    t.bigint "country_id", null: false
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -60,7 +61,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.boolean "current"
     t.json "coverage"
     t.string "slug"
-    t.integer "league_id", null: false
+    t.bigint "league_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["league_id"], name: "index_seasons_on_league_id"
@@ -70,7 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "long"
     t.string "short"
     t.integer "elapsed"
-    t.integer "fixture_id", null: false
+    t.bigint "fixture_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fixture_id"], name: "index_statuses_on_fixture_id"
@@ -113,7 +114,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
   end
 
   add_foreign_key "fixtures", "seasons"
-  add_foreign_key "fixtures", "statuses"
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "venues"

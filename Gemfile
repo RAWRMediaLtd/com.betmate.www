@@ -69,3 +69,6 @@ gem "sidekiq", "~> 7.3"
 gem "sidekiq-scheduler", "~> 5.0"
 
 gem "devise", "~> 4.9"
+
+
+gem "postgresql", "~> 1.0"
