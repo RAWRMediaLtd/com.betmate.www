@@ -1,14 +1,15 @@
 :concurrency: 5
-:schedule:
-  update_countries:
-    cron: "0 0 * * *"
-    class: "UpdateCountriesJob"
-  update_leagues:
-    cron: "0 1 * * *"
-    class: "UpdateLeaguesJob"
-  update_seasons:
-    cron: "0 2 * * *"
-    class: "UpdateSeasonsJob"
-  update_fixtures:
-    cron: "0 3 * * *"
-    class: "UpdateFixturesJob"
+:scheduler:
+  :schedule:
+    update_countries:
+      cron: "0 0 * * *"
+      class: "UpdateCountriesJob"
+    update_leagues:
+      cron: "0 1 * * *"
+      class: "UpdateLeaguesJob"
+    update_seasons:
+      cron: "0 2 * * *"
+      class: "UpdateSeasonsJob"
+    update_fixtures:
+      cron: "0 3 * * *"
+      class: "UpdateFixturesJob"
