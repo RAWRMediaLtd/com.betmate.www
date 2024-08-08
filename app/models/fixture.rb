@@ -55,6 +55,26 @@ class Fixture < ApplicationRecord
 		end
 	end
 
+	def self.fetch_from_api(params = {})
+		league_id = season.league_id
+		season_year = season.year
+
+		url = "https://v3.football.api-sports.io/fixtures"
+		response = HTTParty.get(url, {
+			headers: {
+				'x-apisports-key' => ENV['API_SPORTS_KEY']
+			},
+			query: params
+		})
+
+		if response.success?
+			response.parsed_response['response']
+		else
+			puts "Error fetching fixtures: #{response.message}"
+			[]
+		end
+	end
+
 	def fixture_updated?(fixture_data)
 		referee != fixture_data['fixture']['referee'] ||
 		timezone != fixture_data['fixture']['timezone'] ||

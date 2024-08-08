@@ -16,7 +16,7 @@ class Country < ApplicationRecord
 			remote_countries = response.parsed_response['response']
 
 			remote_countries.each do |remote_country|
-				country = Country.find_or_initialize_by(code: remote_country['code'])
+				country = Country.find_or_initialize_by(name: remote_country['name'])
 				if country.new_record? || country.country_updated?(remote_country)
 					country.update!(
 						name: remote_country['name'],
@@ -49,8 +49,6 @@ class Country < ApplicationRecord
 	end
 
 	def country_updated?(remote_country)
-		name != remote_country['name'] ||
-		code != remote_country['code'] ||
 		flag != remote_country['flag']
 	end
 end

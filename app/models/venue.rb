@@ -1,6 +1,8 @@
 class Venue < ApplicationRecord
 	include Sluggable
 
+	has_many :fixtures
+
 	def self.fetch_and_update_from_api(id = nil)
 		puts "Fetch and update from api - Venues"
 
@@ -23,24 +25,43 @@ class Venue < ApplicationRecord
 	end
 
 	def self.find_or_initialize_and_update(venue_data)
-		venue = Venue.find_or_initialize_by(id: venue_data['id'])
-		Rails.logger.debug "Found or initialized venue: #{venue.id} - #{venue.name}"
+	  retries = 0
 
-		if venue.new_record? || venue.venue_updated?(venue_data)
-			Rails.logger.debug "Updating venue: #{venue_data['name']}"
+	  begin
+      venue = Venue.find_by(id: venue_data['id'])
 
-			venue.assign_attributes(
-				name: venue_data['name'],
-				address: venue_data['address'],
-				city: venue_data['city'],
-				#country: venue_data['country'],
-				capacity: venue_data['capacity'],
-				surface: venue_data['surface'],
-				image: venue_data['image']
-			)
-			venue.slug ||= venue.name.parameterize
-			venue.save!
-		end
+      unless venue
+        venue = Venue.new(id: venue_data['id'])
+      end
+
+      Rails.logger.debug "Found or initialized venue: #{venue.id} - #{venue.name}"
+
+      if venue.new_record? || venue.venue_updated?(venue_data)
+        Rails.logger.debug "Updating venue: #{venue_data['name']}"
+
+        venue.assign_attributes(
+          name: venue_data['name'],
+          address: venue_data['address'],
+          city: venue_data['city'],
+          #country: venue_data['country'],
+          capacity: venue_data['capacity'],
+          surface: venue_data['surface'],
+          image: venue_data['image']
+        )
+        venue.slug ||= venue.name.parameterize
+        venue.save!
+      end
+    rescue ActiveRecord::RecordNotUnique => e
+      Rails.logger.warn "RecordNotUnique error: #{e.message}"
+      if retries < 3
+        retries += 1
+        Rails.logger.warn "Retrying... (#{retries}/3)"
+        sleep(0.5)
+        retry
+      else
+        raise e
+      end
+    end
 
 		venue
 	end
