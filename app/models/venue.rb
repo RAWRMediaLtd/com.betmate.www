@@ -35,6 +35,7 @@ class Venue < ApplicationRecord
       end
 
       Rails.logger.debug "Found or initialized venue: #{venue.id} - #{venue.name}"
+      puts "Venue: #{venue.id} - #{venue.name}"
 
       if venue.new_record? || venue.venue_updated?(venue_data)
         Rails.logger.debug "Updating venue: #{venue_data['name']}"

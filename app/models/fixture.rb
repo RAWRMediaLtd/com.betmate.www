@@ -4,7 +4,7 @@ class Fixture < ApplicationRecord
 	belongs_to :season
   belongs_to :home_team, class_name: 'Team', foreign_key: 'home_team_id'
   belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id'
-  belongs_to :venue
+  belongs_to :venue, optional: true
 
   has_one :status, dependent: :destroy
 
@@ -12,7 +12,11 @@ class Fixture < ApplicationRecord
 	def self.find_or_initialize_and_update(fixture_data, season)
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
 		if fixture.new_record? || fixture.fixture_updated?(fixture_data)
-			venue = Venue.find_or_initialize_and_update(fixture_data['fixture']['venue'])
+			venue = nil
+
+			if fixture_data['fixture']['venue'].present? && fixture_data['fixture']['venue']['name'].present?
+				venue = Venue.find_or_initialize_and_update(fixture_data['fixture']['venue'])
+			end
 
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
 			away_team = Team.find_or_initialize_and_update(fixture_data['teams']['away'])
