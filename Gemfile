@@ -52,23 +52,19 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem "sqlite3", "~> 1.4"
+end
+
+group :production do
+
+  gem "postgresql", "~> 1.0"
 end
 
 gem "httparty", "~> 0.22.0"
 gem "jquery-rails", "~> 4.6"
-gem "sqlite3", "~> 1.4"
-
 gem "dotenv", "~> 3.1"
-
 gem "jsbundling-rails", "~> 1.3"
-
 gem "cssbundling-rails", "~> 1.4"
-
 gem "sidekiq", "~> 6.5", ">= 6.5.12"
-
 gem "sidekiq-scheduler", "~> 5.0"
-
 gem "devise", "~> 4.9"
-
-
-gem "postgresql", "~> 1.0"

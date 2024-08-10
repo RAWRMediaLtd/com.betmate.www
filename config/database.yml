@@ -7,8 +7,8 @@ default: &default
   password: <%= ENV["DATABASE_PASSWORD"] %>
 
 development:
-  <<: *default
-  database: betmate_development
+  adapter: sqlite3
+  database: db/betmate_development.sqlite3
 
 test:
   <<: *default
