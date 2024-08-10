@@ -11,11 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "countries", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.string "code"
     t.string "flag"
     t.string "slug", null: false
@@ -29,10 +26,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "timezone"
     t.datetime "date"
     t.integer "timestamp"
-    t.bigint "venue_id"
-    t.bigint "home_team_id", null: false
-    t.bigint "away_team_id", null: false
-    t.bigint "season_id", null: false
+    t.integer "venue_id"
+    t.integer "home_team_id", null: false
+    t.integer "away_team_id", null: false
+    t.integer "season_id", null: false
     t.string "round"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -47,7 +44,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "name"
     t.string "league_type"
     t.string "logo"
-    t.bigint "country_id", null: false
+    t.integer "country_id", null: false
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -61,7 +58,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.boolean "current"
     t.json "coverage"
     t.string "slug"
-    t.bigint "league_id", null: false
+    t.integer "league_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["league_id"], name: "index_seasons_on_league_id"
@@ -71,7 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.string "long"
     t.string "short"
     t.integer "elapsed"
-    t.bigint "fixture_id", null: false
+    t.integer "fixture_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fixture_id"], name: "index_statuses_on_fixture_id"

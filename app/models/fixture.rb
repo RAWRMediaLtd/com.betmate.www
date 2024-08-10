@@ -5,14 +5,14 @@ class Fixture < ApplicationRecord
   belongs_to :home_team, class_name: 'Team', foreign_key: 'home_team_id'
   belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id'
   belongs_to :venue, optional: true
-
   has_one :status, dependent: :destroy
-
+	has_one :winner, dependant: :destroy, optional: true
 
 	def self.find_or_initialize_and_update(fixture_data, season)
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
 		if fixture.new_record? || fixture.fixture_updated?(fixture_data)
 			venue = nil
+			winner = nil
 
 			if fixture_data['fixture']['venue'].present? && fixture_data['fixture']['venue']['name'].present?
 				venue = Venue.find_or_initialize_and_update(fixture_data['fixture']['venue'])
@@ -20,6 +20,12 @@ class Fixture < ApplicationRecord
 
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
 			away_team = Team.find_or_initialize_and_update(fixture_data['teams']['away'])
+
+			if fixture_data['fixture']['home_team']['winner'] == true
+				winner = "home"
+			elsif fixture_data['fixture']['away_team']['winner'] == true
+				winner = "away"
+			end
 
 			fixture.assign_attributes(
 				referee: fixture_data['fixture']['referee'],
@@ -31,7 +37,8 @@ class Fixture < ApplicationRecord
 				away_team: away_team,
 				#league: League.find_by(id: fixture_data['league']['id']),
 				season: season,
-				round: fixture_data['league']['round']
+				round: fixture_data['league']['round'],
+				winner: winner
 			)
 			fixture.generate_slug
 			fixture.save!
