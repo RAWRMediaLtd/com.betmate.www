@@ -5,8 +5,11 @@ class Fixture < ApplicationRecord
   belongs_to :home_team, class_name: 'Team', foreign_key: 'home_team_id'
   belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id'
   belongs_to :venue, optional: true
-  has_one :status, dependent: :destroy
-	has_one :winner, dependant: :destroy, optional: true
+
+	has_one :period, class_name: 'FixturePeriod', dependent: :destroy
+	has_one :status, class_name: 'FixtureStatus', dependent: :destroy
+	has_one :score, class_name: 'FixtureScore', dependent: :destroy
+
 
 	def self.find_or_initialize_and_update(fixture_data, season)
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
@@ -21,10 +24,12 @@ class Fixture < ApplicationRecord
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
 			away_team = Team.find_or_initialize_and_update(fixture_data['teams']['away'])
 
-			if fixture_data['fixture']['home_team']['winner'] == true
-				winner = "home"
-			elsif fixture_data['fixture']['away_team']['winner'] == true
-				winner = "away"
+			if fixture_data['teams']['home']
+				if fixture_data['teams']['home']['winner'] == true
+					winner = "home"
+				elsif fixture_data['teams']['away']['winner'] == true
+					winner = "away"
+				end
 			end
 
 			fixture.assign_attributes(
@@ -43,7 +48,15 @@ class Fixture < ApplicationRecord
 			fixture.generate_slug
 			fixture.save!
 
-			Status.find_or_initialize_and_update(fixture_data['fixture']['status'], fixture)
+			if fixture_data['fixture']['periods'].present?
+				FixturePeriod.find_or_initialize_and_update(fixture_data['fixture']['periods'], fixture)
+			end
+
+			if fixture_data['fixture']['status'].present?
+				FixtureStatus.find_or_initialize_and_update(fixture_data['fixture']['status'], fixture)
+			end
+
+			FixtureScore.find_or_initialize_and_update(fixture_data['score'], fixture)
 		end
 		fixture
 	end
@@ -92,10 +105,8 @@ class Fixture < ApplicationRecord
 		date != fixture_data['fixture']['date'] ||
 		timestamp != fixture_data['fixture']['timestamp'] ||
 		venue != venue ||
-		status != status ||
 		home_team != home_team ||
 		away_team != away_team ||
-		league != League.find_by(id: fixture_data['league']['id']) ||
 		season != fixture_data['league']['season'] ||
 		round != fixture_data['league']['round']
 	end

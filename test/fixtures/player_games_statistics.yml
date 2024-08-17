@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  player_statistic: one
+  appearances: 1
+  lineups: 1
+  minutes: 1
+  number: 1
+  position: MyString
+  rating: 1.5
+  captain: false
+
+two:
+  player_statistic: two
+  appearances: 1
+  lineups: 1
+  minutes: 1
+  number: 1
+  position: MyString
+  rating: 1.5
+  captain: false

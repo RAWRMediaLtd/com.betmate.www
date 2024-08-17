@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  yellow: 1
+  yellored: 1
+  red: 1
+  player_statistic: one
+
+two:
+  yellow: 1
+  yellored: 1
+  red: 1
+  player_statistic: two

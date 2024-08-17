@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  first_half: 1
+  second_half: 1
+  fixture: one
+
+two:
+  first_half: 1
+  second_half: 1
+  fixture: two

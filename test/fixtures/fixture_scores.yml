@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  halftime_home: 1
+  halftime_away: 1
+  fulltime_home: 1
+  fulltime_away: 1
+  extratime_home: 1
+  extratime_away: 1
+  penalty_home: 1
+  penalty_away: 1
+  fixture: one
+
+two:
+  halftime_home: 1
+  halftime_away: 1
+  fulltime_home: 1
+  fulltime_away: 1
+  extratime_home: 1
+  extratime_away: 1
+  penalty_home: 1
+  penalty_away: 1
+  fixture: two

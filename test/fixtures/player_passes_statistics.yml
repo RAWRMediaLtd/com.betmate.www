@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  total: 1
+  key: 1
+  accuracy: 1
+  player_statistic: one
+
+two:
+  total: 1
+  key: 1
+  accuracy: 1
+  player_statistic: two

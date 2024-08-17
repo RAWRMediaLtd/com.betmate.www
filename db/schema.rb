@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_10_092256) do
   create_table "countries", force: :cascade do |t|
     t.string "name", null: false
     t.string "code"
@@ -19,6 +19,40 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_countries_on_slug", unique: true
+  end
+
+  create_table "fixture_periods", force: :cascade do |t|
+    t.integer "first_half"
+    t.integer "second_half"
+    t.integer "fixture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixture_id"], name: "index_fixture_periods_on_fixture_id"
+  end
+
+  create_table "fixture_scores", force: :cascade do |t|
+    t.integer "halftime_home"
+    t.integer "halftime_away"
+    t.integer "fulltime_home"
+    t.integer "fulltime_away"
+    t.integer "extratime_home"
+    t.integer "extratime_away"
+    t.integer "penalty_home"
+    t.integer "penalty_away"
+    t.integer "fixture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixture_id"], name: "index_fixture_scores_on_fixture_id"
+  end
+
+  create_table "fixture_statuses", force: :cascade do |t|
+    t.string "long"
+    t.string "short"
+    t.integer "elapsed"
+    t.integer "fixture_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixture_id"], name: "index_fixture_statuses_on_fixture_id"
   end
 
   create_table "fixtures", force: :cascade do |t|
@@ -34,6 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
+    t.string "winner"
     t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
     t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
     t.index ["season_id"], name: "index_fixtures_on_season_id"
@@ -110,6 +145,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_30_165938) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "fixture_periods", "fixtures"
+  add_foreign_key "fixture_scores", "fixtures"
+  add_foreign_key "fixture_statuses", "fixtures"
   add_foreign_key "fixtures", "seasons"
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"

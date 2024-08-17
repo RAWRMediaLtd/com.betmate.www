@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  drawn: 1
+  committed: 1
+  player_statistic: one
+
+two:
+  drawn: 1
+  committed: 1
+  player_statistic: two
