@@ -13,6 +13,7 @@ class Fixture < ApplicationRecord
 
 	def self.find_or_initialize_and_update(fixture_data, season)
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
+
 		if fixture.new_record? || fixture.fixture_updated?(fixture_data)
 			venue = nil
 			winner = nil

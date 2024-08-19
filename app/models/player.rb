@@ -1,4 +1,6 @@
 class Player < ApplicationRecord
+  has_many :player_statistics, dependant: :destroy
+
   def self.find_or_initialize_and_update(player)
     player = Player.find_or_initialize_by(id: player['id'])
     if player.new_record? || player.player_updated?(player)
@@ -17,6 +19,10 @@ class Player < ApplicationRecord
         photo:         player['photo']
       )
       player.save!
+
+      player_data['statistics'].each do |stat_data|
+        PlayerStatistic.find_or_initialize_and_update(stat_data, player)
+      end
   end
 
   def self.fetch_from_api(params = {})
