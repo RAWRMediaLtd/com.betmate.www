@@ -1,47 +1,48 @@
 Rails.application.routes.draw do
+  get 'pages/home'
   devise_for :users
-  root 'countries#index'
+  root 'pages#home'
 
-	resources :countries, param: :slug, path: '', only: [:index, :show] do
-		collection do
-			get 'refresh'
-		end
+  resources :countries, param: :slug, path: '', only: %i[index show] do
+    collection do
+      get 'refresh'
+    end
 
-		resources :leagues, param: :slug, path: '', only: [:index, :show] do
-			collection do
-				get 'refresh'
-			end
+    resources :leagues, param: :slug, path: '', only: %i[index show] do
+      collection do
+        get 'refresh'
+      end
 
-			resources :seasons, param: :slug, path: '', only: [:index, :show] do
-				collection do
-					get 'refresh'
-				end
+      resources :seasons, param: :slug, path: '', only: %i[index show] do
+        collection do
+          get 'refresh'
+        end
 
-				resources :fixtures, param: :slug, only: [:index, :show] do
-					collection do
-						get 'refresh'
-					end
-				end
-			end
+        resources :fixtures, param: :slug, only: %i[index show] do
+          collection do
+            get 'refresh'
+          end
+        end
+      end
 
-			resources :teams, only: [:index, :show] do
-				collection do
-					get 'refresh'
-				end
-			end
-		end
-	end
+      resources :teams, only: %i[index show] do
+        collection do
+          get 'refresh'
+        end
+      end
+    end
+  end
 
-	#
-	#resources :leagues, only: [:index, :show] do
-	#	collection do
-	#		get 'refresh'
-	#	end
-	#end
+  #
+  # resources :leagues, only: [:index, :show] do
+  #	collection do
+  #		get 'refresh'
+  #	end
+  # end
 
-	resources :venues, param: :slug, only: [:index, :show] do
-	  collection do
-	    get 'refresh'
+  resources :venues, param: :slug, only: %i[index show] do
+    collection do
+      get 'refresh'
     end
   end
 
@@ -49,5 +50,5 @@ Rails.application.routes.draw do
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  get 'up' => 'rails/health#show', as: :rails_health_check
 end
