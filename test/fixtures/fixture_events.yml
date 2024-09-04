@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  time_elapsed: 1
+  time_extra: false
+  team: one
+  player: one
+  assist: one
+  type: 
+  detail: MyString
+  comments: MyString
+  fixture: one
+
+two:
+  time_elapsed: 1
+  time_extra: false
+  team: two
+  player: two
+  assist: two
+  type: 
+  detail: MyString
+  comments: MyString
+  fixture: two

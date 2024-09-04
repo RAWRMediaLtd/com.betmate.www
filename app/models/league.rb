@@ -1,62 +1,65 @@
 class League < ApplicationRecord
-	include Sluggable
+  include Sluggable
 
-	belongs_to :country
-	has_many :seasons, dependent: :destroy
-	has_many :teams
-	has_many :fixtures
+  belongs_to :country
+  has_many :seasons, dependent: :destroy
+  has_many :teams
+  has_many :fixtures
 
-	def self.fetch_and_update_from_api(country = nil)
+  def self.fetch_and_update_from_api(country = nil)
 
-		url = country ? "https://v3.football.api-sports.io/leagues?country=#{country.name}": "https://v3.football.api-sports.io/leagues"
-		response = HTTParty.get(url, headers: {
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
-		})
+    url = country ? "https://v3.football.api-sports.io/leagues?country=#{country.name}": "https://v3.football.api-sports.io/leagues"
+    response = HTTParty.get(
+      url, headers: {
+        'x-apisports-key' => ENV['API_SPORTS_KEY']
+      }
+    )
 
-		if response.success?
-			remote_leagues = response.parsed_response['response']
+    return unless response.success?
 
-			remote_leagues.each do |remote_league|
-				league_data = remote_league['league']
-				country_data = remote_league['country']
-				seasons_data = remote_league['seasons']
+    remote_leagues = response.parsed_response['response']
 
-				country = Country.find_or_initialize_and_update(country_data)
-				league = League.find_or_initialize_and_update(league_data, country)
+    remote_leagues.each do |remote_league|
+      league_data = remote_league['league']
+      country_data = remote_league['country']
+      seasons_data = remote_league['seasons']
 
-        seasons_data.each do |season_data|
-          Season.find_or_initialize_and_update(season_data, league)
-        end
+      country = Country.find_or_initialize_and_update(country_data)
+      league = League.find_or_initialize_and_update(league_data, country)
 
-			end
-		end
-	end
+      seasons_data.each do |season_data|
+        Season.find_or_initialize_and_update(season_data, league)
+      end
 
-	def self.find_or_initialize_and_update(league_data, country)
-		league = country.leagues.find_or_initialize_by(id: league_data['id'])
+    end
 
-		Rails.logger.debug "Found or initialized league: #{league.id} - #{league.name}"
+  end
 
-		if league.new_record? || league.league_updated?(league_data)
+  def self.find_or_initialize_and_update(league_data, country)
+    league = country.leagues.find_or_initialize_by(id: league_data['id'])
 
-			Rails.logger.debug "Updating league: #{league_data['name']}"
+    Rails.logger.debug "Found or initialized league: #{league.id} - #{league.name}"
 
-			league.assign_attributes(
-				name: league_data['name'],
-				league_type: league_data['type'],
-				logo: league_data['logo'],
-				country: country
-			)
-			league.slug ||= league.name.parameterize
-			league.save!
-		end
+    if league.new_record? || league.league_updated?(league_data)
 
-		league
-	end
+      Rails.logger.debug "Updating league: #{league_data['name']}"
 
-	def league_updated?(remote_league)
-		name != remote_league['name'] ||
-		league_type != remote_league['type'] ||
-		logo != remote_league['logo']
-	end
+      league.assign_attributes(
+        name: league_data['name'],
+        league_type: league_data['type'],
+        logo: league_data['logo'],
+        country:
+      )
+      league.slug ||= league.name.parameterize
+      league.save!
+    end
+
+    league
+  end
+
+  def league_updated?(remote_league)
+    name != remote_league['name'] ||
+      league_type != remote_league['type'] ||
+      logo != remote_league['logo']
+  end
 end

@@ -2,6 +2,8 @@ class Team < ApplicationRecord
 	has_many :home_fixtures, class_name: 'Fixture', foreign_key: 'home_team_id'
 	has_many :away_fixtures, class_name: 'Fixture', foreign_key: 'away_team_id'
 
+	has_many :fixture_events
+
 	def self.find_or_initialize_and_update(team_data)
 		team = Team.find_or_initialize_by(id: team_data['id'])
 		if team.new_record? || team.team_updated?(team_data)

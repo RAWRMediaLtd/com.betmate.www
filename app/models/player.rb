@@ -1,5 +1,6 @@
 class Player < ApplicationRecord
   has_many :player_statistics, dependant: :destroy
+  has_many :fixture_events, dependent: :destroy
 
   def self.find_or_initialize_and_update(player)
     player = Player.find_or_initialize_by(id: player['id'])
