@@ -4,14 +4,16 @@
 	<tbody>
 		<% @fixtures.each do |date, fixtures| %>
 			<tr class="table-secondary">
-				<td colspan="4"><%= date.strftime("%d/%m/%Y") %></td>
+				<td colspan="6"><%= date.strftime("%d/%m/%Y") %></td>
 			</tr>
 			<% fixtures.each do |fixture| %>
 				<tr scope="row">
 					<td><%= fixture.date.strftime("%H:%M") %></td>
 					<td><%= fixture.home_team.name %></td>
-					<td>v</td>
-					<td><%= fixture.away_team.name %></td>
+					<td class="text-center <% if fixture.winner == "home" %> table-success <% elsif fixture.winner == "away" %> table-danger <% end %>" ><%= fixture.score.fulltime_home %></td>
+					<td class="text-center">v</td>
+					<td class="text-center <% if fixture.winner == "away" %> table-success <% elsif fixture.winner == "home" %> table-danger <% end %>" ><%= fixture.score.fulltime_away %></td>
+					<td class="text-end"><%= fixture.away_team.name %></td>
 				</tr>
 			<% end %>
 		<% end %>

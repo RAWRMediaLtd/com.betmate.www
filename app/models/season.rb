@@ -13,8 +13,8 @@ class Season < ApplicationRecord
 			Rails.logger.debug "Updating season: #{season_data['year']}"
 
 			season.assign_attributes(
-				start: season_data['start'],
-				self_end: season_data['end'],
+				start_date: season_data['start'],
+				end_date: season_data['end'],
 				current: season_data['current'],
 				coverage: season_data['coverage']
 			)
@@ -25,8 +25,8 @@ class Season < ApplicationRecord
 	end
 
 	def season_updated?(remote_season)
-		start != remote_season['start'] ||
-		self[:end] != remote_season['end'] ||
+		start_date != remote_season['start'] ||
+		end_date != remote_season['end'] ||
 		current != remote_season['current'] ||
 		coverage != remote_season['coverage']
 	end

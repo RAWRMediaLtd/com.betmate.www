@@ -17,9 +17,9 @@ class LeaguesController < ApplicationController
 		respond_to do |format|
 			format.html {
 				if @country
-					redirect_to country_leagues_path(@country), 
-					notice: 'Leagues udpated sucessfully' 
-				else 
+					redirect_to country_leagues_path(@country.slug),
+					notice: 'Leagues udpated sucessfully'
+				else
 					redirect_to leagues_path,
 					notice: 'Leagues Updated successfully'
 				end

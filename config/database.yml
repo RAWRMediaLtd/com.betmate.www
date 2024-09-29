@@ -8,11 +8,13 @@ default: &default
 
 development:
   <<: *default
-  database: betmate_development
+  adapter: sqlite3
+  database: db/development.sqlite3
 
 test:
   <<: *default
-  database: betmate_testing
+  adapter: sqlite3
+  database: db/test.sqlite3
 
 staging:
   <<: *default

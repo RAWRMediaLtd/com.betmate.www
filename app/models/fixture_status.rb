@@ -1,4 +1,4 @@
-class Status < ApplicationRecord
+class FixtureStatus < ApplicationRecord
 	belongs_to :fixture
 
 	def self.find_or_initialize_and_update(status_data, fixture)

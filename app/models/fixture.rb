@@ -6,13 +6,21 @@ class Fixture < ApplicationRecord
   belongs_to :away_team, class_name: 'Team', foreign_key: 'away_team_id'
   belongs_to :venue, optional: true
 
-  has_one :status, dependent: :destroy
+	has_one :period, class_name: 'FixturePeriod', dependent: :destroy
+	has_one :status, class_name: 'FixtureStatus', dependent: :destroy
+	has_one :score, class_name: 'FixtureScore', dependent: :destroy
+
+	has_many :fixture_events, dependent: :destroy
 
 
 	def self.find_or_initialize_and_update(fixture_data, season)
+		puts "FIXTURE DATA: #{fixture_data}"
+
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
+
 		if fixture.new_record? || fixture.fixture_updated?(fixture_data)
 			venue = nil
+			winner = nil
 
 			if fixture_data['fixture']['venue'].present? && fixture_data['fixture']['venue']['name'].present?
 				venue = Venue.find_or_initialize_and_update(fixture_data['fixture']['venue'])
@@ -20,6 +28,14 @@ class Fixture < ApplicationRecord
 
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
 			away_team = Team.find_or_initialize_and_update(fixture_data['teams']['away'])
+
+			if fixture_data['teams']['home']
+				if fixture_data['teams']['home']['winner'] == true
+					winner = "home"
+				elsif fixture_data['teams']['away']['winner'] == true
+					winner = "away"
+				end
+			end
 
 			fixture.assign_attributes(
 				referee: fixture_data['fixture']['referee'],
@@ -31,12 +47,21 @@ class Fixture < ApplicationRecord
 				away_team: away_team,
 				#league: League.find_by(id: fixture_data['league']['id']),
 				season: season,
-				round: fixture_data['league']['round']
+				round: fixture_data['league']['round'],
+				winner: winner
 			)
 			fixture.generate_slug
 			fixture.save!
 
-			Status.find_or_initialize_and_update(fixture_data['fixture']['status'], fixture)
+			if fixture_data['fixture']['periods'].present?
+				FixturePeriod.find_or_initialize_and_update(fixture_data['fixture']['periods'], fixture)
+			end
+
+			if fixture_data['fixture']['status'].present?
+				FixtureStatus.find_or_initialize_and_update(fixture_data['fixture']['status'], fixture)
+			end
+
+			FixtureScore.find_or_initialize_and_update(fixture_data['score'], fixture)
 		end
 		fixture
 	end
@@ -85,10 +110,8 @@ class Fixture < ApplicationRecord
 		date != fixture_data['fixture']['date'] ||
 		timestamp != fixture_data['fixture']['timestamp'] ||
 		venue != venue ||
-		status != status ||
 		home_team != home_team ||
 		away_team != away_team ||
-		league != League.find_by(id: fixture_data['league']['id']) ||
 		season != fixture_data['league']['season'] ||
 		round != fixture_data['league']['round']
 	end

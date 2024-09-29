@@ -32,11 +32,12 @@ Rails.application.routes.draw do
 		end
 	end
 
-	resources :leagues, only: [:index, :show] do
-		collection do
-			get 'refresh'
-		end
-	end
+	#
+	#resources :leagues, only: [:index, :show] do
+	#	collection do
+	#		get 'refresh'
+	#	end
+	#end
 
 	resources :venues, param: :slug, only: [:index, :show] do
 	  collection do

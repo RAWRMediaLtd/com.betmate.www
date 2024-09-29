@@ -1,9 +1,7 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th scope="col">Year</th>
-			<th scope="col">Start</th>
-			<th scope="col">End</th>
+			<th scope="col" class="text-nowrap">Year</th>
 			<th scope="col">Current</th>
 			<th scope="col">Coverage</th>
 		</tr>
@@ -11,9 +9,7 @@
 	<tbody>
 		<% seasons.each do |season| %>
 			<tr class="season">
-				<th scope="row"><%= link_to season.year, country_league_season_fixtures_path(@league.country.slug, @league.slug, season.slug) %></th>
-				<td><%= season.start %></td>
-				<td><%= season.end %></td>
+				<th scope="row" class="text-nowrap"><%= link_to "#{season.start_date.year} - #{season.end_date.year}", country_league_season_fixtures_path(@league.country.slug, @league.slug, season.slug) %></th>
 				<td><%= season.current %></td>
 				<td><%= season.coverage.to_json %></td>
 			</tr>

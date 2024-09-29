@@ -28,14 +28,9 @@ class Venue < ApplicationRecord
 	  retries = 0
 
 	  begin
-      venue = Venue.find_by(id: venue_data['id'])
-
-      unless venue
-        venue = Venue.new(id: venue_data['id'])
-      end
+      venue = Venue.find_or_initialize_by(id: venue_data['id'])
 
       Rails.logger.debug "Found or initialized venue: #{venue.id} - #{venue.name}"
-      puts "Venue: #{venue.id} - #{venue.name}"
 
       if venue.new_record? || venue.venue_updated?(venue_data)
         Rails.logger.debug "Updating venue: #{venue_data['name']}"
@@ -44,7 +39,7 @@ class Venue < ApplicationRecord
           name: venue_data['name'],
           address: venue_data['address'],
           city: venue_data['city'],
-          #country: venue_data['country'],
+          # country: country,
           capacity: venue_data['capacity'],
           surface: venue_data['surface'],
           image: venue_data['image']
