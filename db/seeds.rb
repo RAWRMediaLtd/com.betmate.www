@@ -7,4 +7,11 @@ admin = User.create!(
 	admin: true
 )
 
+usage = ApiUsage.create!(
+	last_reset: Date.today,
+	usage: 0,
+	limit: 75000
+)
+
 puts "Created admin user: #{admin.email}"
+puts "Created API usage: #{usage.usage}/#{usage.limit}"
