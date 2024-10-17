@@ -1,0 +1,2 @@
+class ApiUsage < ApplicationRecord
+end

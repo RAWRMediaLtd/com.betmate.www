@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_19_155523) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_30_175447) do
+  create_table "api_usages", force: :cascade do |t|
+    t.date "last_reset"
+    t.integer "usage"
+    t.integer "limit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "countries", force: :cascade do |t|
     t.string "name", null: false
     t.string "code"
@@ -26,7 +34,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_155523) do
     t.boolean "time_extra"
     t.integer "team_id", null: false
     t.integer "player_id", null: false
-    t.integer "assist_id", null: false
+    t.integer "assist_id"
     t.string "type"
     t.string "detail"
     t.string "comments"
@@ -305,9 +313,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_155523) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "fixture_events", "assists"
   add_foreign_key "fixture_events", "fixtures"
   add_foreign_key "fixture_events", "players"
+  add_foreign_key "fixture_events", "players", column: "assist_id"
   add_foreign_key "fixture_events", "teams"
   add_foreign_key "fixture_periods", "fixtures"
   add_foreign_key "fixture_scores", "fixtures"
