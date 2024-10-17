@@ -7,37 +7,28 @@ class League < ApplicationRecord
 	has_many :fixtures
 
 	def self.fetch_and_update_from_api(country = nil)
+		api_client = ApiClient.new
+		remote_leagues = api_client.fetch('leagues', country: country.name)
 
-		url = country ? "https://v3.football.api-sports.io/leagues?country=#{country.name}": "https://v3.football.api-sports.io/leagues"
-		response = HTTParty.get(url, headers: {
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
-		})
+		remote_leagues.each do |remote_league|
 
-		if response.success?
-			remote_leagues = response.parsed_response['response']
+			league_data = remote_league['league']
+			country_data = remote_league['country']
+			seasons_data = remote_league['seasons']
 
-			remote_leagues.each do |remote_league|
-				league_data = remote_league['league']
-				country_data = remote_league['country']
-				seasons_data = remote_league['seasons']
+			country = Country.create_or_update(country_data)
+			league = League.create_or_update(league_data, country)
 
-				country = Country.find_or_initialize_and_update(country_data)
-				league = League.find_or_initialize_and_update(league_data, country)
-
-        seasons_data.each do |season_data|
-          Season.find_or_initialize_and_update(season_data, league)
-        end
-
+			seasons_data.each do |season_data|
+				Season.find_or_initialize_and_update(season_data, league)
 			end
 		end
 	end
 
-	def self.find_or_initialize_and_update(league_data, country)
+	def self.create_or_update(league_data, country)
 		league = country.leagues.find_or_initialize_by(id: league_data['id'])
 
-		Rails.logger.debug "Found or initialized league: #{league.id} - #{league.name}"
-
-		if league.new_record? || league.league_updated?(league_data)
+		if league.new_record?
 
 			Rails.logger.debug "Updating league: #{league_data['name']}"
 
@@ -48,15 +39,13 @@ class League < ApplicationRecord
 				country: country
 			)
 			league.slug ||= league.name.parameterize
-			league.save!
+ 		else
+			league.assign_attributes(
+				logo: league_data['logo']
+			)
 		end
 
+		league.save!
 		league
-	end
-
-	def league_updated?(remote_league)
-		name != remote_league['name'] ||
-		league_type != remote_league['type'] ||
-		logo != remote_league['logo']
 	end
 end
