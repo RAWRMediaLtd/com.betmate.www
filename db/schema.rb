@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_30_175447) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
   create_table "api_usages", force: :cascade do |t|
     t.date "last_reset"
     t.integer "usage"
@@ -104,6 +104,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_30_175447) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.string "winner"
+    t.datetime "last_synced_at"
     t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
     t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
     t.index ["season_id"], name: "index_fixtures_on_season_id"
@@ -118,6 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_30_175447) do
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["country_id"], name: "index_leagues_on_country_id"
   end
 

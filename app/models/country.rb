@@ -18,7 +18,7 @@ class Country < ApplicationRecord
 	def self.create_or_update(country_data)
 		normalized_name = normalize_name(country_data['name'])
 		slug = normalized_name.parameterize
-		country = Country.find_or_initialize_by(slug: slug)
+		#country = Country.find_or_initialize_by(slug: slug)
 
 		if country.new_record?
 			puts "Create country"

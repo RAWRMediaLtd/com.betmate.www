@@ -8,7 +8,7 @@ class League < ApplicationRecord
 
 	def self.fetch_and_update_from_api(country = nil)
 		api_client = ApiClient.new
-		remote_leagues = api_client.fetch('leagues', country: country.name)
+		remote_leagues = api_client.fetch('leagues')
 
 		remote_leagues.each do |remote_league|
 
@@ -20,7 +20,7 @@ class League < ApplicationRecord
 			league = League.create_or_update(league_data, country)
 
 			seasons_data.each do |season_data|
-				Season.find_or_initialize_and_update(season_data, league)
+				Season.create_or_update(season_data, league)
 			end
 		end
 	end
@@ -29,9 +29,8 @@ class League < ApplicationRecord
 		league = country.leagues.find_or_initialize_by(id: league_data['id'])
 
 		if league.new_record?
-
-			Rails.logger.debug "Updating league: #{league_data['name']}"
-
+			Rails.logger.info "Creating new league: #{league_data['name']}"
+			# puts "Creating new league: #{league_data['name']}"
 			league.assign_attributes(
 				name: league_data['name'],
 				league_type: league_data['type'],
@@ -40,12 +39,15 @@ class League < ApplicationRecord
 			)
 			league.slug ||= league.name.parameterize
  		else
+			Rails.logger.info "Updating league: #{league_data['name']}"
+			#	puts "Updating league: #{league_data['name']}"
 			league.assign_attributes(
 				logo: league_data['logo']
 			)
 		end
 
 		league.save!
+		# puts "League saved: #{league.id} - #{league.name}"
 		league
 	end
 end

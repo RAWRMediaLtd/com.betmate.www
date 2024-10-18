@@ -1,26 +1,19 @@
 default: &default
-  adapter: postgresql
-  encoding: unicode
-  host: localhost
+  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV["DATABASE_USERNAME"] %>
-  password: <%= ENV["DATABASE_PASSWORD"] %>
 
 development:
   <<: *default
-  adapter: sqlite3
   database: db/development.sqlite3
 
 test:
   <<: *default
-  adapter: sqlite3
   database: db/test.sqlite3
 
 staging:
-  <<: *default
-  database: betmate_staging
+  database: db/staging.sqlite3
 
 production:
   <<: *default
-  database: betmate_production
+  database: db/production.sqlite3
 

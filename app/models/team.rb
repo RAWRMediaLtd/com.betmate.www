@@ -8,28 +8,41 @@ class Team < ApplicationRecord
 
 
 	def self.find_or_initialize_and_update(team_data)
-
-		puts "TEAM: #{team_data['name']}"
-		puts "COUNTRY: #{team_data['country']}"
+		puts "Team data: #{team_data['name']}"
 
 		team = Team.find_or_initialize_by(id: team_data['id'])
-		if team.new_record? || team.team_updated?(team_data)
 
+		puts "Country: #{team_data['country']}"
+		if team_data['country'].present?
+			country = Country.find_or_create_by(name: team_data['country'])
+		else
 			country = nil
-			if team_data['country'].present?
-				country = Country.find_or_create_by(name: team_data['country'])
-			end
+		end
 
+		if team.new_record?
+			Rails.logger.info "Creating new team: #{team_data['name']}"
+			puts "Creating new team: #{team_data['name']}"
 			team.assign_attributes(
 				name: team_data['name'],
 				code: team_data['code'],
 				country: country,
 				founded: team_data['founded'],
 				national: team_data['national'],
+				logo: team_data['logo'],
+				slug: team_data['name'].to_slug.normalize.to_s
+			)
+		else
+			Rails.logger.info "Updating team: #{team_data['name']}"
+			# puts "Updating team: #{team_data['name']}"
+			team.assign_attributes(
+				code: team_data['code'],
+				country: country,
+				founded: team_data['founded'],
+				national: team_data['national'],
 				logo: team_data['logo']
 			)
-			team.save(validate: false)
 		end
+		team.save
 		team
 	end
 
@@ -42,34 +55,13 @@ class Team < ApplicationRecord
 		logo != team_data['logo']
 	end
 
-	def self.fetch_and_update_from_api(id = nil)
-		url = "https://v3.football.api-sports.io/teams?id=#{id}"
-		response = HTTParty.get(url, headers: {
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
-		})
+	def self.fetch_and_update_from_api(params = {})
+		api_client = ApiClient.new
+		remote_teams = api_client.fetch('teams', params)
 
-		if response.success?
-			remote_teams = response.parsed_response['response']
-
-			remote_teams.each do |remote_team|
-				Team.find_or_initialize_and_update(remote_team)
-			end
-		end
-	end
-
-	def self.fetch_and_update_from_api(league:, season:)
-		url = "https://v3.football.api-sports.io/teams?league=#{league}&season=#{season}"
-		response = HTTParty.get(url, headers: {
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
-		})
-
-		if response.success?
-			teams_data = response.parsed_response['response']
-			teams_data.each do |team_data|
-				Team.find_or_initialize_and_update(team_data['team'])
-			end
-		else
-			Rails.logger.error "Error fetching teams: #{response.message}"
+		remote_teams.each do |remote_team|
+			team_data = remote_team['team']
+			Team.find_or_initialize_and_update(team_data)
 		end
 	end
 end

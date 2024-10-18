@@ -75,3 +75,5 @@ gem "sidekiq", "~> 6.5", ">= 6.5.12"
 gem "sidekiq-scheduler", "~> 5.0"
 
 gem "devise", "~> 4.9"
+
+gem "babosa", "~> 2.0"

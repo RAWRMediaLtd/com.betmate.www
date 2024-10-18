@@ -14,7 +14,8 @@ class Fixture < ApplicationRecord
 
 
 	def self.find_or_initialize_and_update(fixture_data, season)
-		puts "FIXTURE DATA: #{fixture_data}"
+		puts "Adding Fixture: #{fixture_data['fixture']['id']}"
+		puts "#{fixture_data['teams']['home']['name']} vs #{fixture_data['teams']['away']['name']}"
 
 		fixture = Fixture.find_or_initialize_by(id: fixture_data['fixture']['id'])
 
@@ -23,7 +24,8 @@ class Fixture < ApplicationRecord
 			winner = nil
 
 			if fixture_data['fixture']['venue'].present? && fixture_data['fixture']['venue']['name'].present?
-				venue = Venue.find_or_initialize_and_update(fixture_data['fixture']['venue'])
+				# puts "Venue: #{fixture_data['fixture']['venue']}"
+				venue = Venue.find_or_create(fixture_data['fixture']['venue'])
 			end
 
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
@@ -48,10 +50,13 @@ class Fixture < ApplicationRecord
 				#league: League.find_by(id: fixture_data['league']['id']),
 				season: season,
 				round: fixture_data['league']['round'],
-				winner: winner
+				winner: winner,
+				last_synced_at: Time.now
 			)
 			fixture.generate_slug
 			fixture.save!
+
+			# puts "Saved Fixture: #{fixture.id} - #{fixture.home_team.name} vs #{fixture.away_team.name}"
 
 			if fixture_data['fixture']['periods'].present?
 				FixturePeriod.find_or_initialize_and_update(fixture_data['fixture']['periods'], fixture)
@@ -66,41 +71,18 @@ class Fixture < ApplicationRecord
 		fixture
 	end
 
-	def self.fetch_and_update_from_api(season)
-		puts "SEASON: #{season}"
-		league_id = season.league_id
-		season_year = season.year
+	def self.fetch_and_update_from_api(params = {})
+		api_client = ApiClient.new
 
-		url = "https://v3.football.api-sports.io/fixtures?league=#{league_id}&season=#{season_year}"
-		response = HTTParty.get(url, headers: {
-			'x-apisports-key' => ENV['API_SPORTS_KEY']
-		})
+		remote_fixtures = api_client.fetch('fixtures', params)
+		season = Season.find_by(year: params[:season])
 
-		if response.success?
-			remote_fixtures = response.parsed_response['response']
+		if remote_fixtures.present?
+
+			Rails.logger.info("Found #{remote_fixtures.count} fixtures")
 			remote_fixtures.each do |remote_fixture|
 				Fixture.find_or_initialize_and_update(remote_fixture, season)
 			end
-		end
-	end
-
-	def self.fetch_from_api(params = {})
-		league_id = season.league_id
-		season_year = season.year
-
-		url = "https://v3.football.api-sports.io/fixtures"
-		response = HTTParty.get(url, {
-			headers: {
-				'x-apisports-key' => ENV['API_SPORTS_KEY']
-			},
-			query: params
-		})
-
-		if response.success?
-			response.parsed_response['response']
-		else
-			puts "Error fetching fixtures: #{response.message}"
-			[]
 		end
 	end
 

@@ -5,7 +5,7 @@ class FixtureStatus < ApplicationRecord
 
 		status = fixture.status || fixture.build_status
 
-		puts "STATUS: Fixture - #{fixture.id}"
+		#puts "STATUS: Fixture - #{fixture.id}"
 
 		if status.new_record? || status.status_updated?(status_data)
 			status.assign_attributes(

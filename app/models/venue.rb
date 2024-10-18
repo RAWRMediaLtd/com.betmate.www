@@ -4,7 +4,7 @@ class Venue < ApplicationRecord
 	has_many :fixtures
 
 	def self.fetch_and_update_from_api(id = nil)
-		puts "Fetch and update from api - Venues"
+		#puts "Fetch and update from api - Venues"
 
 		url = "https://v3.football.api-sports.io/venues?id=#{id}"
 
@@ -24,50 +24,45 @@ class Venue < ApplicationRecord
 		end
 	end
 
-	def self.find_or_initialize_and_update(venue_data)
+	def self.find_or_create(venue_data)
 	  retries = 0
 
-	  begin
-      venue = Venue.find_or_initialize_by(id: venue_data['id'])
+    venue = Venue.find_or_initialize_by(id: venue_data['id'])
 
-      Rails.logger.debug "Found or initialized venue: #{venue.id} - #{venue.name}"
+		if venue.new_record?
+			Rails.logger.debug "Creating venue: #{venue_data['name']}"
+			puts "Creating venue: #{venue_data['name']}"
 
-      if venue.new_record? || venue.venue_updated?(venue_data)
-        Rails.logger.debug "Updating venue: #{venue_data['name']}"
+			venue.assign_attributes(
+				name: sanitize_name(venue_data['name']),
+				address: venue_data['address'],
+				city: venue_data['city'],
+				# country: country,
+				capacity: venue_data['capacity'],
+				surface: venue_data['surface'],
+				image: venue_data['image'],
+				slug: name.to_slug.normalize.to_s
+			)
+			# venue.slug ||= venue.name.parameterize
+		else
+			Rails.logger.debug "Updating venue: #{venue_data['name']}"
+			#puts "Updating venue: #{venue_data['name']}"
 
-        venue.assign_attributes(
-          name: venue_data['name'],
-          address: venue_data['address'],
-          city: venue_data['city'],
-          # country: country,
-          capacity: venue_data['capacity'],
-          surface: venue_data['surface'],
-          image: venue_data['image']
-        )
-        venue.slug ||= venue.name.parameterize
-        venue.save!
-      end
-    rescue ActiveRecord::RecordNotUnique => e
-      Rails.logger.warn "RecordNotUnique error: #{e.message}"
-      if retries < 3
-        retries += 1
-        Rails.logger.warn "Retrying... (#{retries}/3)"
-        sleep(0.5)
-        retry
-      else
-        raise e
-      end
-    end
+			venue.assign_attributes(
+				address: venue_data['address'],
+				city: venue_data['city'],
+				capacity: venue_data['capacity'],
+				surface: venue_data['surface'],
+				image: venue_data['image']
+			)
+		end
 
-		venue
+		venue.save!
+    venue
 	end
 
-	def venue_updated?(remote_venue)
-		name != remote_venue['name'] ||
-		address != remote_venue['address'] ||
-		city != remote_venue['country'] ||
-		capacity != remote_venue['capacity'] ||
-		surface != remote_venue['surface'] ||
-		image != remote_venue['image']
+	private
+	def self.sanitize_name(name)
+		name.gsub!(/[^0-9A-Za-z]/, '-')
 	end
 end

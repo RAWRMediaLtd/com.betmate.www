@@ -2,47 +2,29 @@ namespace :backfill do
 	desc "Backfill data for countries, leagues, seasons, fixtures, teams, and players"
 
 	task fetch_data: :environment do
-		api_limit = ENV['API_LIMIT'].to_i
+		api_usage = ApiUsage.first_or_create(limit: ENV['API_LIMIT'].to_i, usage: 0)
+		api_limit = api_usage.limit - api_usage.usage
 
-		Country.find_each do |country|
-			Rails.logger.info "Processing country: #{country.name}"
-			if country.leagues.empty?
-				Rails.logger.info "Fetching leagues for #{country.name}"
-				League.fetch_and_update_from_api(country)
-				api_limit -= 1
-				break if api_limit <= 0
+		League.all.each do |league|
+			next if league.last_synced_at && league.last_synced_at > 1.day.ago
+
+			puts "Fetching fixtures for #{league.name}"
+			league.seasons.each do |season|
+				puts "Fetching fixtures for #{season.year}"
+
+				next if season.fixtures.where('last_synced_at > ?', 2.day.ago).exists?
+
+				Fixture.fetch_and_update_from_api(league: league.id, season: season.year)
 			end
 
-			country.leagues.find_each do |league|
-				Rails.logger.info "Processing league: #{league.name}"
+			league.update(last_synced_at: Time.now)
+		end
+	end
 
-				league.seasons.find_each do |season|
-					Rails.logger.info "Processing season: #{season.year}"
-					
-					if season.fixtures.empty?
-						Rails.logger.info "Fetching fixtures for #{league.name} in #{season.year}"
-						Fixture.fetch_and_update_from_api(season)
-						api_limit -= 1
-						break if api_limit <= 0
-					end
-
-					# Fetch teams for the season
-					Rails.logger.info "Fetching teams for #{league.name} in #{season.year}"
-					Team.fetch_and_update_from_api(league: league.id, season: season.year)
-					api_limit -= 1
-					break if api_limit <= 0
-
-					# Fetch players for each team in the season
-					season.fixtures.pluck(:home_team_id, :away_team_id).flatten.uniq.each do |team_id|
-						Rails.logger.info "Fetching players for team ID: #{team_id} in #{season.year}"
-						Player.fetch_and_update_from_api(team: team_id, season: season.year)
-						api_limit -= 1
-						break if api_limit <= 0
-					end
-				end
-				break if api_limit <= 0
-			end
-			break if api_limit <= 0
+	task team_seasons: :environment do
+		Team.all.each do |team|
+			puts "Fetching seasons for #{team.name}"
+			team.seasons.fetch_from_api
 		end
 	end
 end

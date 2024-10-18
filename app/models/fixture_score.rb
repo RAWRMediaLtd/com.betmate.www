@@ -5,7 +5,7 @@ class FixtureScore < ApplicationRecord
 
 		score = fixture.score || fixture.build_score
 
-		puts "SCORE: Fixture - #{fixture.id}"
+		#puts "SCORE: Fixture - #{fixture.id}"
 
 		if score.new_record? || score.score_updated?(score_data)
 			score.assign_attributes(

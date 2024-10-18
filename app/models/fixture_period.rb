@@ -3,12 +3,12 @@ class FixturePeriod < ApplicationRecord
 
   def self.find_or_initialize_and_update(period_data, fixture)
 
-		puts "Period: #{period_data}"
-		puts "Fixture: #{fixture}"
+		#puts "Period: #{period_data}"
+		#puts "Fixture: #{fixture}"
 
 		period = fixture.period || fixture.build_period
 
-		puts "PERIOD: Fixture - #{fixture.id}"
+		#puts "PERIOD: Fixture - #{fixture.id}"
 
 		if period.new_record? || period.period_updated?(period_data)
 			period.assign_attributes(
