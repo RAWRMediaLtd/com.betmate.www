@@ -21,10 +21,11 @@ namespace :backfill do
 		end
 	end
 
-	task team_seasons: :environment do
-		Team.all.each do |team|
-			puts "Fetching seasons for #{team.name}"
-			team.seasons.fetch_from_api
+	task fetch_fixture_statistics: :environment do
+		Fixture.all.each do |fixture|
+			next if fixture.fixture_statistics.where('last_synced_at > ?', 2.day.ago).exists?
+			puts "Fetching statistics for #{fixture.slug}"
+			FixtureStatistic.fetch_from_api(fixture: fixture.id)
 		end
 	end
 end
