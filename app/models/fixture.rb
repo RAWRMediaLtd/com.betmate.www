@@ -11,6 +11,7 @@ class Fixture < ApplicationRecord
 	has_one :score, class_name: 'FixtureScore', dependent: :destroy
 
 	has_many :fixture_events, dependent: :destroy
+	has_many :fixture_statistics, dependent: :destroy
 
 
 	def self.find_or_initialize_and_update(fixture_data, season)

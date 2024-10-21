@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_19_072557) do
   create_table "api_usages", force: :cascade do |t|
     t.date "last_reset"
     t.integer "usage"
@@ -72,12 +72,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
   end
 
   create_table "fixture_statistics", force: :cascade do |t|
-    t.string "type"
+    t.string "stat_type"
     t.integer "value"
     t.integer "fixture_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "team_id", null: false
+    t.boolean "half", default: false
+    t.datetime "last_synced_at"
     t.index ["fixture_id"], name: "index_fixture_statistics_on_fixture_id"
+    t.index ["team_id"], name: "index_fixture_statistics_on_team_id"
   end
 
   create_table "fixture_statuses", force: :cascade do |t|
@@ -87,6 +91,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
     t.integer "fixture_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["fixture_id"], name: "index_fixture_statuses_on_fixture_id"
   end
 
@@ -278,6 +283,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
     t.index ["league_id"], name: "index_seasons_on_league_id"
   end
 
+  create_table "team_seasons", force: :cascade do |t|
+    t.integer "team_id", null: false
+    t.integer "season_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_id"], name: "index_team_seasons_on_season_id"
+    t.index ["team_id", "season_id"], name: "index_team_seasons_on_team_and_season", unique: true
+    t.index ["team_id"], name: "index_team_seasons_on_team_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.string "code"
@@ -322,6 +337,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
   add_foreign_key "fixture_periods", "fixtures"
   add_foreign_key "fixture_scores", "fixtures"
   add_foreign_key "fixture_statistics", "fixtures"
+  add_foreign_key "fixture_statistics", "teams"
   add_foreign_key "fixture_statuses", "fixtures"
   add_foreign_key "fixtures", "seasons"
   add_foreign_key "fixtures", "teams", column: "away_team_id"
@@ -343,5 +359,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_17_185329) do
   add_foreign_key "player_substitues_statistics", "player_statistics"
   add_foreign_key "player_tackles_statistics", "player_statistics"
   add_foreign_key "seasons", "leagues"
+  add_foreign_key "team_seasons", "seasons"
+  add_foreign_key "team_seasons", "teams"
   add_foreign_key "teams", "countries"
 end
