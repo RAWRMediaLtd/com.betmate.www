@@ -12,7 +12,8 @@ class FixtureStatus < ApplicationRecord
 				long: status_data['long'],
 				short: status_data['short'],
 				elapsed: status_data['elapsed'],
-				fixture: fixture
+				fixture: fixture,
+				last_synced_at: Time.now
 			)
 			status.save!
 		end
