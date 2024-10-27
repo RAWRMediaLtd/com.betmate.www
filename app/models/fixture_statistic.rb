@@ -6,6 +6,8 @@ class FixtureStatistic < ApplicationRecord
     api_client = ApiClient.new
     remote_fixture_statistics = api_client.fetch('fixtures/statistics', params)
 
+    puts "Remote fixture statistics: #{remote_fixture_statistics.length}"
+
     remote_fixture_statistics.each do |remote_fixture_statistic|
       team_data = remote_fixture_statistic['team']
       team = Team.find_or_create_by(id: team_data['id']) do |t|
@@ -21,7 +23,6 @@ class FixtureStatistic < ApplicationRecord
 
   def self.create_or_update(fixture_statistic_data, team, fixture_id)
     Rails.logger.info "Creating or updating fixture statistic: #{fixture_statistic_data}"
-    puts "Creating or updating fixture statistic: #{fixture_statistic_data}"
 
     fixture = Fixture.find_by(id: fixture_id)
 
