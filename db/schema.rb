@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_19_072557) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
   create_table "api_usages", force: :cascade do |t|
     t.date "last_reset"
     t.integer "usage"
@@ -35,12 +35,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_19_072557) do
     t.integer "team_id", null: false
     t.integer "player_id", null: false
     t.integer "assist_id"
-    t.string "type"
+    t.string "event_type"
     t.string "detail"
     t.string "comments"
     t.integer "fixture_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["assist_id"], name: "index_fixture_events_on_assist_id"
     t.index ["fixture_id"], name: "index_fixture_events_on_fixture_id"
     t.index ["player_id"], name: "index_fixture_events_on_player_id"

@@ -40,6 +40,13 @@ namespace :backfill do
 
 	task fetch_fixture_events: :environment do
 		Fixture.includes(:season).find_each do |fixture|
+			coverage = fixture.season.coverage
+
+			unless coverage.dig('fixtures', 'events')
+				puts "Skipping fixture #{fixture.id} - #{fixture.slug} because it's not in the coverage"
+				next
+			end
+
 			next if fixture.fixture_events.where('last_synced_at > ?', 1.year.ago).exists?
 
 			puts "Fetching events for #{fixture.id} - #{fixture.slug}"
