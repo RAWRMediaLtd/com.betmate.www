@@ -8,7 +8,8 @@ class PlayerDribblesStatistic < ApplicationRecord
       dribbles_stat.assign_attributes(
         attempts: dribbles_data['attempts'],
         succes: dribbles_data['success'],
-        past: dribbles_data['past']
+        past: dribbles_data['past'],
+        last_synced_at: Time.now
       )
     end
 

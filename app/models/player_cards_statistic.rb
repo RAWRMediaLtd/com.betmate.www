@@ -8,7 +8,8 @@ class PlayerCardsStatistic < ApplicationRecord
       cards_stat.assign_attributes(
         yellow: cards_data['yellow'],
         yellowred: cards_data['yellowred'],
-        red: cards_data['red']
+        red: cards_data['red'],
+        last_synced_at: Time.now
       )
     end
     cards_stat.save!

@@ -9,6 +9,7 @@ class PlayerPassesStatistic < ApplicationRecord
         total: passes_data['total'],
         key: passes_data['key'],
         accuracy: passes_data['accuracy'],
+        last_synced_at: Time.now
       )
     end
 

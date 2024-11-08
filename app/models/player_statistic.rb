@@ -3,31 +3,43 @@ class PlayerStatistic < ApplicationRecord
   belongs_to :team
   belongs_to :season
 
-  has_one :player_cards_statistic, dependant: :destroy
-  has_one :player_dribbles_statistic, dependant: :destroy
-  has_one :player_duels_statistic, dependant: :destroy
-  has_one :player_fouls_statistic, dependant: :destroy
-  has_one :player_games_statistic, dependant: :destroy
-  has_one :player_goals_statistic, dependant: :destroy
-  has_one :player_passes_statistic, dependant: :destroy
-  has_one :player_penalty_statistic, dependant: :destroy
-  has_one :player_shots_statistic, dependant: :destroy
-  has_one :player_substitutes_statistic, dependant: :destroy
-  has_one :player_tackles_statistic, dependant: :destroy
+  has_one :player_cards_statistic, dependent: :destroy
+  has_one :player_dribbles_statistic, dependent: :destroy
+  has_one :player_duels_statistic, dependent: :destroy
+  has_one :player_fouls_statistic, dependent: :destroy
+  has_one :player_games_statistic, dependent: :destroy
+  has_one :player_goals_statistic, dependent: :destroy
+  has_one :player_passes_statistic, dependent: :destroy
+  has_one :player_penalty_statistic, dependent: :destroy
+  has_one :player_shots_statistic, dependent: :destroy
+  has_one :player_substitutes_statistic, dependent: :destroy
+  has_one :player_tackles_statistic, dependent: :destroy
 
   def self.find_or_initialize_and_update(stat_data, player)
-
-    country = Country.find_or_initialize_by(name: stat_data['league']['country'])
+    Rails.logger.info "Updating player statistic: #{stat_data['player']}"
+    puts "Stat data: #{stat_data}"
 
     league_data = stat_data['league']
-    league = League.find_or_initialize_and_update(league_data, stat_data['league']['country'])
+    country_name = league_data['country']
+    season_year = league_data['season']
 
-    season = Season.find_or_initialize_and_update(year: stat_data['league']['season'], country)
-    team = Team.find_or_initialize_and_update(id: stat_data['team']['id'])
+    unless country_name.present?
+      Rails.logger.warn "Country name not found for player statistic"
+      puts "Country name not found for player statistic"
+      return
+    end
+
+    country = Country.find_or_initialize_by(name: country_name)
+    league = League.find_or_initialize_and_update(league_data, country)
+    season = Season.find_or_initialize_and_update(league, season_year)
+
+    team_data = stat_data['team']
+    team = Team.find_or_initialize_and_update(team_data)
 
     statistic = PlayerStatistic.find_or_initialize_and_update(player: player, team: team, season: season)
 
     if statistic.new_record? || statistic.statistics_updated?(stat_data)
+      statistic.last_synced_at = Time.now
       statistic.save!
 
       PlayerCardsStatistic.find_or_initialize_and_update(stat_data['cards'], statistic)
@@ -43,5 +55,9 @@ class PlayerStatistic < ApplicationRecord
       PlayerTacklesStatistic.find_or_initialize_and_update(stat_data['tackles'], statistic)
     end
     statistic
+  end
+
+  def player_updated?(player_data)
+
   end
 end

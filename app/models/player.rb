@@ -3,9 +3,13 @@ class Player < ApplicationRecord
   has_many :fixture_events
 
   def self.find_or_initialize_and_update(player)
-    player = Player.find_or_initialize_by(id: player['id'])
-    if player.new_record? || player.player_updated?(player)
-      player.assign_attributes(
+    puts "Find or initialize and update Player: #{player['name']}"
+
+    player_data = Player.find_or_initialize_by(id: player['id'])
+
+    if player_data.new_record? || player_data.player_updated?(player)
+      puts "Updating player: #{player['id']} - #{player['name']}"
+      player_data.assign_attributes(
         name:          player['name'],
         firstname:     player['firstname'],
         lastname:      player['lastname'],
@@ -17,51 +21,37 @@ class Player < ApplicationRecord
         height:        player['height'],
         weight:        player['weight'],
         injured:       player['injured'],
-        photo:         player['photo']
+        photo:         player['photo'],
+        last_synced_at: Time.now
       )
-      player.save!
-
-      if player['statistics'].is_a?(Array)
-        player['statistics'].each do |stat_data|
-          PlayerStatistic.find_or_initialize_and_update(stat_data, player)
-        end
-      else
-        Rails.logger.info "No statistics found for player #{player['id']}"
-      end
+      player_data.save!
     end
+  end
+
+  def self.fetch_player_seasons_from_api(player_id)
+    api_client = ApiClient.new
+    remote_player_seasons = api_client.fetch('players/seasons', { player: player_id })
+
+    if remote_player_seasons.nil? || remote_player_seasons.empty?
+      Rails.logger.info "No seasons found for player #{player_id}"
+      return []
+    end
+    remote_player_seasons
   end
 
   def self.fetch_from_api(params = {})
-    url = "https://v3.football.api-sports.io/players"
-    response = HTTParty.get(url, {
-      headers: {
-        'x-apisports-key' => ENV['API_SPORTS_KEY']
-      },
-      query: params
-    })
+    api_client = ApiClient.new
+    remote_player = api_client.fetch('players', params)
 
-    if response.success?
-      response.parsed_response['response']
-    else
-      puts "Error fetching fixtures: #{response.message}"
-      []
+
+
+    if remote_player.empty?
+      Rails.logger.info "No player found for #{params[:player]}"
+      puts "No player found for #{params[:player]}"
+      return nil
     end
-  end
 
-  def self.fetch_and_update_from_api(team:, season:)
-    url = "https://v3.football.api-sports.io/players?team=#{team}&season=#{season}"
-    response = HTTParty.get(url, headers: {
-      'x-apisports-key' => ENV['API_SPORTS_KEY']
-    })
-
-    if response.success?
-      players_data = response.parsed_response['response']
-      players_data.each do |player_data|
-        Player.find_or_initialize_and_update(player_data['player'])
-      end
-    else
-      Rails.logger.error "Error fetching players: #{response.message}"
-    end
+    remote_player
   end
 
   def player_updated?(player)

@@ -7,7 +7,8 @@ class PlayerDuelsStatistic < ApplicationRecord
     if duels_stat.new_record? || duels_stat.updated?(duels_data)
       duels_stat.assign_attributes(
         total: duels_data['total'],
-        won: duels_data['won']
+        won: duels_data['won'],
+        last_synced_at: Time.now
       )
     end
 

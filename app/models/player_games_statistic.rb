@@ -13,6 +13,7 @@ class PlayerGamesStatistic < ApplicationRecord
         position: games_data['position'],
         rating: games_data['rating'],
         captain: games_data['captain'],
+        last_synced_at: Time.now
       )
     end
     games_statistic.save!

@@ -8,7 +8,8 @@ class PlayerSubstituesStatistic < ApplicationRecord
       substitutes_statistic.assign_attributes(
         self_in: substitutes_data['in'],
         out: substitutes_data['out'],
-        bench: substitutes_data['bench']
+        bench: substitutes_data['bench'],
+        last_synced_at: Time.now
       )
     end
 

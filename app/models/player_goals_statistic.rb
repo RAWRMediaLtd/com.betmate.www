@@ -10,6 +10,7 @@ class PlayerGoalsStatistic < ApplicationRecord
         conceded: goals_data['conceded'],
         assists: goals_data['assists'],
         saves: goals_data['saves'],
+        last_synced_at: Time.now
       )
     end
 

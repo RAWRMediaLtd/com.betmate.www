@@ -8,7 +8,8 @@ class PlayerTacklesStatistic < ApplicationRecord
       tackles_statistic.assign_attributes(
         total: tackles_data['total'],
         blocks: tackles_data['blocks'],
-        interceptions: tackles_data['interceptions']
+        interceptions: tackles_data['interceptions'],
+        last_synced_at: Time.now
       )
     end
 
@@ -16,8 +17,8 @@ class PlayerTacklesStatistic < ApplicationRecord
   end
 
   def updated?(tackles_data)
-    total: tackles_data['total'] ||
-    blocks: tackles_data['blocks'] ||
-    interceptions: tackles_data['interceptions']
+    total != tackles_data['total'] ||
+    blocks != tackles_data['blocks'] ||
+    interceptions != tackles_data['interceptions']
   end
 end

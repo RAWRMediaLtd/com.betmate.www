@@ -53,4 +53,47 @@ namespace :backfill do
 			FixtureEvent.fetch_from_api(fixture: fixture.id)
 		end
 	end
+
+	task fetch_player_profiles: :environment do
+		Player.all.each do |player|
+			next if player.last_synced_at && player.last_synced_at > 5.minutes.ago
+
+			puts "Fetching player profile for #{player.id}"
+
+			# Fetch available seasons for the player
+			player_seasons = Player.fetch_player_seasons_from_api(player.id)
+			if player_seasons.nil? || player_seasons.empty?
+				Rails.logger.info "No seasons found for player #{player.id}, setting seasons to #{player_seasons}"
+				next
+			end
+
+			player_seasons.each do |season|
+				puts "Fetching player profile for #{player.id} in season #{season}"
+				remote_player_data = Player.fetch_from_api(id: player.id, season: season)
+
+				if remote_player_data.nil? || remote_player_data.empty?
+					Rails.logger.warn "No data returned for player #{player.id} in season #{season}"
+					puts "No data returned for player #{player.id} in season #{season}"
+					next
+				end
+
+				puts "Remote player data: #{remote_player_data.first['player']}"
+
+				# Update player info
+				player_data = remote_player_data.first['player']
+				Player.find_or_initialize_and_update(player_data)
+
+				# Update player statistics
+				puts "Remote player statistics: #{remote_player_data.first['statistics']}"
+				stat_data = remote_player_data.first['statistics']
+				stat_data.each do |stat|
+					PlayerStatistic.find_or_initialize_and_update(stat, player)
+				end
+			end
+
+			# Update the players last synced at
+			player.update(last_synced_at: Time.now)
+
+		end
+	end
 end

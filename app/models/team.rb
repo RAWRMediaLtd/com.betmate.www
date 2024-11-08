@@ -13,6 +13,7 @@ class Team < ApplicationRecord
 		team = Team.find_or_initialize_by(id: team_data['id'])
 
 		puts "Country: #{team_data['country']}"
+
 		if team_data['country'].present?
 			country = Country.find_or_create_by(name: team_data['country'])
 		else
@@ -42,7 +43,7 @@ class Team < ApplicationRecord
 				logo: team_data['logo']
 			)
 		end
-		team.save
+		team.save!
 		team
 	end
 

@@ -7,7 +7,8 @@ class PlayerShotsStatistic < ApplicationRecord
     if shots_statistic.new_record? || shots_statistic.updated?(shots_data)
       shots_statistic.assign_attributes(
         total: shots_data['total'],
-        on: shots_data['on']
+        on: shots_data['on'],
+        last_synced_at: Time.now
       )
     end
     shots_statistic.save!

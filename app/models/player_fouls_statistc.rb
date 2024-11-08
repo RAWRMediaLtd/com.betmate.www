@@ -7,7 +7,8 @@ class PlayerFoulsStatistc < ApplicationRecord
     if fouls_stat.new_record? || fouls_stat.updated?(fouls_data)
       fouls_stat.assign_attributes(
         drawn: fouls_data['drawn'],
-        committed: fouls_data['committed']
+        committed: fouls_data['committed'],
+        last_synced_at: Time.now
       )
     end
     fouls_stat.save!

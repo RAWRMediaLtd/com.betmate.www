@@ -15,27 +15,27 @@ class Season < ApplicationRecord
 		end
 	end
 
-	def self.create_or_update(season_data, league)
-		season = league.seasons.find_or_initialize_by(year: season_data['year'])
+	def self.find_or_initialize_and_update(league, season_year)
+		season_data = league.seasons.find_or_initialize_by(year: season_year)
 
-		if season.new_record?
+		if season_data.new_record?
 			Rails.logger.info "Creating new season: #{season_data['year']}"
 			# puts "Creating new season: #{season_data['year']}"
-			season.assign_attributes(
+			season_data.assign_attributes(
 				start_date: season_data['start'],
 				end_date: season_data['end'],
 				current: season_data['current'],
 				coverage: season_data['coverage']
 			)
-			season.generate_slug
+			season_data.generate_slug
 		else
 			Rails.logger.info "Updating season: #{season_data['year']}"
 			# puts "Updating season: #{season_data['year']}"
-			season.assign_attributes(
+			season_data.assign_attributes(
 				coverage: season_data['coverage']
 			)
 		end
-		season.save!
-		season
+		season_data.save!
+		season_data
 	end
 end

@@ -10,7 +10,8 @@ class PlayerPenaltyStatistic < ApplicationRecord
         committed: penalty_data['commited'],
         scored: penalty_data['scored'],
         missed: penalty_data['missed'],
-        saved: penalty_data['saved']
+        saved: penalty_data['saved'],
+        last_synced_at: Time.now
       )
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_27_161757) do
   create_table "api_usages", force: :cascade do |t|
     t.date "last_reset"
     t.integer "usage"
@@ -136,6 +136,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_cards_statistics_on_player_statistic_id"
   end
 
@@ -146,6 +147,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_dribbles_statistics_on_player_statistic_id"
   end
 
@@ -155,16 +157,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_duels_statistics_on_player_statistic_id"
   end
 
-  create_table "player_fouls_statistcs", force: :cascade do |t|
+  create_table "player_fouls_statistics", force: :cascade do |t|
     t.integer "drawn"
     t.integer "committed"
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["player_statistic_id"], name: "index_player_fouls_statistcs_on_player_statistic_id"
+    t.datetime "last_synced_at"
+    t.index ["player_statistic_id"], name: "index_player_fouls_statistics_on_player_statistic_id"
   end
 
   create_table "player_games_statistics", force: :cascade do |t|
@@ -178,6 +182,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.boolean "captain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_games_statistics_on_player_statistic_id"
   end
 
@@ -189,6 +194,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_goals_statistics_on_player_statistic_id"
   end
 
@@ -199,6 +205,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_passes_statistics_on_player_statistic_id"
   end
 
@@ -211,6 +218,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_penalty_statistics_on_player_statistic_id"
   end
 
@@ -220,6 +228,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_shots_statistics_on_player_statistic_id"
   end
 
@@ -229,19 +238,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "season_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_id"], name: "index_player_statistics_on_player_id"
     t.index ["season_id"], name: "index_player_statistics_on_season_id"
     t.index ["team_id"], name: "index_player_statistics_on_team_id"
   end
 
-  create_table "player_substitues_statistics", force: :cascade do |t|
+  create_table "player_substitutes_statistics", force: :cascade do |t|
     t.integer "in"
     t.integer "out"
     t.integer "bench"
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["player_statistic_id"], name: "index_player_substitues_statistics_on_player_statistic_id"
+    t.datetime "last_synced_at"
+    t.index ["player_statistic_id"], name: "index_player_substitutes_statistics_on_player_statistic_id"
   end
 
   create_table "player_tackles_statistics", force: :cascade do |t|
@@ -251,6 +262,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.integer "player_statistic_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
     t.index ["player_statistic_id"], name: "index_player_tackles_statistics_on_player_statistic_id"
   end
 
@@ -269,6 +281,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
     t.string "photo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_synced_at"
   end
 
   create_table "seasons", force: :cascade do |t|
@@ -348,7 +361,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
   add_foreign_key "player_cards_statistics", "player_statistics"
   add_foreign_key "player_dribbles_statistics", "player_statistics"
   add_foreign_key "player_duels_statistics", "player_statistics"
-  add_foreign_key "player_fouls_statistcs", "player_statistics"
+  add_foreign_key "player_fouls_statistics", "player_statistics"
   add_foreign_key "player_games_statistics", "player_statistics"
   add_foreign_key "player_goals_statistics", "player_statistics"
   add_foreign_key "player_passes_statistics", "player_statistics"
@@ -357,7 +370,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_112248) do
   add_foreign_key "player_statistics", "players"
   add_foreign_key "player_statistics", "seasons"
   add_foreign_key "player_statistics", "teams"
-  add_foreign_key "player_substitues_statistics", "player_statistics"
+  add_foreign_key "player_substitutes_statistics", "player_statistics"
   add_foreign_key "player_tackles_statistics", "player_statistics"
   add_foreign_key "seasons", "leagues"
   add_foreign_key "team_seasons", "seasons"
