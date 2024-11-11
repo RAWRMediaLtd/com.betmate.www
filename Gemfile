@@ -42,7 +42,6 @@ group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
   gem "sqlite3", "~> 1.4"
-  gem "rspec-rails", "~> 7.0.1"
 end
 
 group :development do
@@ -54,6 +53,10 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+end
+
+group :test do
+  gem "webmock"
 end
 
 group :production do
@@ -69,10 +72,6 @@ gem "dotenv", "~> 3.1"
 gem "jsbundling-rails", "~> 1.3"
 
 gem "cssbundling-rails", "~> 1.4"
-
-gem "sidekiq", "~> 6.5", ">= 6.5.12"
-
-gem "sidekiq-scheduler", "~> 5.0"
 
 gem "devise", "~> 4.9"
 
