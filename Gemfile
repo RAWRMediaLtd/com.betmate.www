@@ -44,5 +44,3 @@ gem "sorbet", "~> 0.5.11647"
 gem "sorbet-runtime", "~> 0.5.11647"
 
 gem "rubocop", "~> 1.68", require: false
-
-gem "standard", "~> 1.42"

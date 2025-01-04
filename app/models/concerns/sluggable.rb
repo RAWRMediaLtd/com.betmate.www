@@ -25,8 +25,10 @@ module Sluggable
 	end
 
 	def generate_season_slug
-		start_year = self.start_date.year
-		end_year = self.end_date.year
+		if self.start_date && self.end_date
+			start_year = self.start_date.year
+			end_year = self.end_date.year
+		end
 
 		if start_year == end_year
 			start_year.to_s

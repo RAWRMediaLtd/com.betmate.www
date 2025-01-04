@@ -1,5 +1,5 @@
 class Team < ApplicationRecord
-	belongs_to :country
+	belongs_to :country, optional: true
 
 	has_many :home_fixtures, class_name: 'Fixture', foreign_key: 'home_team_id'
 	has_many :away_fixtures, class_name: 'Fixture', foreign_key: 'away_team_id'
@@ -8,17 +8,17 @@ class Team < ApplicationRecord
 
 
 	def self.find_or_initialize_and_update(team_data)
-		puts "Team data: #{team_data['name']}"
-
+		Rails.logger.info "Find or Initialize and Update team: #{team_data['name']}"
 		team = Team.find_or_initialize_by(id: team_data['id'])
 
-		puts "Country: #{team_data['country']}"
 
 		if team_data['country'].present?
 			country = Country.find_or_create_by(name: team_data['country'])
 		else
 			country = nil
 		end
+
+		puts "Country: #{country.inspect}"
 
 		if team.new_record?
 			Rails.logger.info "Creating new team: #{team_data['name']}"

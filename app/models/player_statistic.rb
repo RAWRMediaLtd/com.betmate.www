@@ -20,23 +20,16 @@ class PlayerStatistic < ApplicationRecord
     puts "Stat data: #{stat_data}"
 
     league_data = stat_data['league']
-    country_name = league_data['country']
     season_year = league_data['season']
 
-    unless country_name.present?
-      Rails.logger.warn "Country name not found for player statistic"
-      puts "Country name not found for player statistic"
-      return
-    end
 
-    country = Country.find_or_initialize_by(name: country_name)
-    league = League.find_or_initialize_and_update(league_data, country)
+    league = League.find_or_initialize_by(id: league_data['id'])
     season = Season.find_or_initialize_and_update(league, season_year)
 
     team_data = stat_data['team']
     team = Team.find_or_initialize_and_update(team_data)
 
-    statistic = PlayerStatistic.find_or_initialize_and_update(player: player, team: team, season: season)
+    statistic = PlayerStatistic.find_or_initialize_by(player: player, team: team, season: season)
 
     if statistic.new_record? || statistic.statistics_updated?(stat_data)
       statistic.last_synced_at = Time.now

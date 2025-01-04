@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 namespace :backfill do
-	desc "Backfill data for countries, leagues, seasons, fixtures, teams, and players"
+	desc 'Backfill data for countries, leagues, seasons, fixtures, teams, and players'
 
 	task fetch_data: :environment do
-		#api_usage = ApiUsage.first_or_create(limit: ENV['API_LIMIT'].to_i, usage: 0)
-		#api_limit = api_usage.limit - api_usage.usage
+		# api_usage = ApiUsage.first_or_create(limit: ENV['API_LIMIT'].to_i, usage: 0)
+		# api_limit = api_usage.limit - api_usage.usage
 
-		League.all.each do |league|
-			next if league.last_synced_at && league.last_synced_at > 1.day.ago
+	  League.all.each do |league|
+      next if league.last_synced_at && league.last_synced_at > 1.day.ago
 
-			puts "Fetching fixtures for #{league.name}"
+      puts "Fetching fixtures for #{league.name}"
+
 			league.seasons.each do |season|
 				puts "Fetching fixtures for #{season.year}"
 
@@ -55,7 +58,7 @@ namespace :backfill do
 	end
 
 	task fetch_player_profiles: :environment do
-		Player.all.each do |player|
+   Player.all.each do |player|
 			next if player.last_synced_at && player.last_synced_at > 5.minutes.ago
 
 			puts "Fetching player profile for #{player.id}"

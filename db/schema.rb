@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_27_161757) do
+ActiveRecord::Schema[8.0].define(version: 2024_11_17_160945) do
   create_table "api_usages", force: :cascade do |t|
     t.date "last_reset"
     t.integer "usage"
@@ -137,6 +137,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_27_161757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "last_synced_at"
+    t.integer "yellowred"
     t.index ["player_statistic_id"], name: "index_player_cards_statistics_on_player_statistic_id"
   end
 
