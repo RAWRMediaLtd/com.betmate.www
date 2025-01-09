@@ -19,8 +19,8 @@ module Sluggable
 	private
 
 	def generate_slug_from_name
-		transliterated_name = name.to_slug.normalize.to_s
-		slug = transliterated_name.normalize.to_s
+		slug = name.to_slug.normalize.to_s
+		# slug = transliterated_name.normalize.to_s
 		slug.present? ? slug : SecureRandom.hex(8)
 	end
 

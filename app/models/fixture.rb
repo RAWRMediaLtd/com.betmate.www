@@ -26,7 +26,7 @@ class Fixture < ApplicationRecord
 
 			if fixture_data['fixture']['venue'].present? && fixture_data['fixture']['venue']['name'].present?
 				# puts "Venue: #{fixture_data['fixture']['venue']}"
-				venue = Venue.find_or_create(fixture_data['fixture']['venue'])
+				venue = Venue.find_or_create_by(id: fixture_data['fixture']['venue']['id'])
 			end
 
 			home_team = Team.find_or_initialize_and_update(fixture_data['teams']['home'])
